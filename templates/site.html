@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block body %}
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="">
+        <img src="/static/img/poi_logo.png">
+      </a>
+      <div class="branding">
+        <span class="branding-lg"><a href="/" class="text-dark">POI</a></span><br/>
+        <span class="branding-sm text-muted">Point Of Interest Alert Broker</span>
+      </div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/help/">Help</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="mailto:poi@vanderbilt.edu">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main role="main" class="container-fluid">
+
+    {% block content %}{% endblock %}
+
+  </main>
+
+  {% block foot %}
+  <footer class="footer">
+    <div class="container-fluid">
+      <p>
+        Thanks to: Deep Thought and my husband.
+        <br/>
+        Copyright © 2020 <a href="https://techfreaq.de">Nina</a>. All rights reserved.
+        Fork me <a href="https://github.com/" title="source code">on Github</a>
+      </p>
+    </div>
+  </footer>
+  {% endblock %}
+
+{% endblock %}

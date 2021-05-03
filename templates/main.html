@@ -1,0 +1,294 @@
+{% extends 'site.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <p>
+      <strong>POI </strong> provides access to alerts.
+    </p>
+    <p>
+      The following table lists XY alerts.
+    </p>
+    <p>
+      See the <a href="/help" title="help">help</a> page for descriptions of the table values and available filters.
+    </p>
+  </div>
+</div>
+{{has_next}}
+<form method="GET" action="/">
+  <div class="row">
+
+    <div class="col-md-10">
+      <div class="table-responsive">
+
+        <div class="row justify-content-center">
+          <p>
+          <!-- TODO: Pagination: arg_str not implemented {{ arg_str }}& -->
+          <!-- e.g. ?sort_value=jd&sort_order=desc&objectId=&candid=&time__gt=2021-02-28&time__lt=&time__since=&jd__gt=&jd__lt=&filter=&cone=&objectcone=&objectidps=&ra__gt=&ra__lt=&dec__gt=&dec__lt=&l__gt=&l__lt=&b__gt=&b__lt=&magpsf__gte=&magpsf__lte=&sigmapsf__lte=&magap__gte=&magap__lte=&distnr__gte=&distnr__lte=&deltamaglatest__gte=&deltamaglatest__lte=&deltamagref__gte=&deltamagref__lte=&elong__lte=&nbad__lte=&rb__gte=&drb__gte=&classtar__gte=&classtar__lte=&fwhm__lte= -->
+          <!-- <div class="col"> -->
+          <!-- Buttons are disabled via CSS based on page no. and has_next -->
+          <a href="/?{{ query_string }}&page={{ page - 1 }}" class="btn btn-primary {% if page > 1 %}disabled{% endif %}"><i class="fa fa-caret-left fa-lg" title="Filter" aria-label="Previous"></i> Prev</a>
+          <a href="/?{{ query_string }}&page={{ page + 1 }}" class="btn btn-primary {% if has_next == False %}disabled{% endif %}">Next <i class="fa fa-caret-right fa-lg" title="Next" aria-label="Next"></i></a>
+          <!-- </div>
+          <div class="col-md-4">&nbsp;xxxxxx</div> -->
+          </p>
+        </div>
+        <div class="row">
+
+          <!-- <table class="table table-striped table-sm"> 
+                        </table>
+            -->
+          <!-- <div class="form-row">
+              <div class="col">
+                <label for="time__gt">time (lower)</label>
+                <input type="date" class="form-control form-control-sm" id="time__gt" name="time__gt" value="{{ request.args.time__gt }}" placeholder="Lower">
+              </div>
+              <div class="col">
+                <label for="time__gt">time (upper)</label>
+                <input type="date" class="form-control form-control-sm" id="time__lt" name="time__lt" value="{{ request.args.time__lt }}" placeholder="Upper">
+              </div>
+            </div>
+      
+            <div class="form-row">
+              <div class="col">
+                <label for="time__since">time since</label>
+                <input type="number" step="any" class="form-control form-control-sm" id="time__since" name="time__since" value="{{ request.args.time__since }}" placeholder="seconds">
+              </div>
+            </div> -->
+
+          <!-- <div class="form-group">
+              <label for="cone">Cone Search</label>
+              <input type="text" class="form-control form-control-sm" id="cone" name="cone" value="{{ request.args.cone }}">
+              <small class="form-text text-muted">Format: ra,dec,radius in degrees.</small>
+            </div> -->
+
+          <!-- <div class="form-group">
+              <label for="objectcone">Cone Search (object)</label>
+              <input type="text" class="form-control form-control-sm" id="cone" name="objectcone" value="{{ request.args.objectcone }}">
+              <small class="form-text text-muted">
+                Format: Object name,radius in degrees. Object name lookups via <a href="https://simbad2k.lco.global" title="Simbad2k">Simbad2k</a>.
+              </small>
+            </div>
+      
+            <div class="form-group">
+              <label for="objectidps">Nearby Objects</label>
+              <input type="text" class="form-control form-control-sm" id="objectidps" name="objectidps" value="{{ request.args.objectidps }}">
+              <small class="form-text text-muted">ID from PS1 catalog.</small>
+            </div> -->
+
+          <!-- Equatorial coords ra & dec-->
+          <!-- <div id="equatorial_coords">
+              <p>Equatorial Coords</p>    
+
+            </div> -->
+
+          <!-- galactic coords -->
+          <!-- <div id="galactic_coords">
+              <p>Galactic Coords</p>
+              <label for="l__gt">l</label>
+              <div class="form-row">
+                <div class="col">
+                  <input type="number" step="any" class="form-control form-control-sm" id="l__gt" name="l__gt" value="{{ request.args.l__gt }}" placeholder="Lower">
+                </div>
+                <div class="col">
+                   <input type="number" step="any" class="form-control form-control-sm" id="l__lt" name="l__lt" value="{{ request.args.l__lt }}" placeholder="Upper">
+                </div>
+              </div>
+      
+              <label for="b__gt">b</label>
+              <div class="form-row">
+                <div class="col">
+                  <input type="number" step="any" class="form-control form-control-sm" id="b__gt" name="b__gt" value="{{ request.args.b__gt }}" placeholder="Lower">
+                </div>
+                <div class="col">
+                   <input type="number" step="any" class="form-control form-control-sm" id="b__lt" name="b__lt" value="{{ request.args.b__lt }}" placeholder="Upper">
+                </div>
+              </div>
+            </div> -->
+
+          <!-- <div class="form-group">
+              <label for="sigmapsf__lte">sigmapsf &lt;= </label>
+              <input type="number" step="any" class="form-control form-control-sm" id="sigmapsf__lte" name="sigmapsf__lte" value="{{ request.args.sigmapsf__lte }}">
+            </div> -->
+
+        </div>
+
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr>
+              <th>date</th>
+              <th>candid</th>
+              <th>objectId</th>
+              <th title="Julian Date">jd</th>
+              <th>filter</th>
+              <th title="degrees">ra</th>
+              <th title="degrees">dec</th>
+              <th title="magnitude">magpsf</th>
+              <th title="magap">magap</th>
+            </tr>
+
+            <!-- <form method="POST" action="/"> -->
+            <tr>
+              <th>
+                <!-- <div class="form-group"> -->
+                <!-- <label for="date">date</label> -->
+                <input type="text" class="form-control form-control-sm" id="date" name="date"
+                  value="{{ request.args.date }}">
+                <!-- </div> -->
+              </th>
+              <th>
+                <!-- <div class="form-group"> -->
+                <!-- <label for="candid">candid</label> -->
+                <input type="text" class="form-control form-control-sm" id="candid" name="candid"
+                  value="{{ request.args.candid }}">
+                <!-- </div> -->
+              </th>
+              <th>
+                <!-- <div class="form-group"> -->
+                <!-- <label for="objectId">objectId</label> -->
+                <input type="text" class="form-control form-control-sm" id="objectId" name="objectId"
+                  value="{{ request.args.objectId }}">
+                <!-- </div> -->
+              </th>
+              <th>
+                <!-- <label for="jd">jd</label> -->
+                <input type="text" class="form-control form-control-sm" id="jd" name="jd" value="{{ request.args.jd }}">
+              </th>
+              <th>
+                <!-- <div class="form-group"> -->
+                <!-- <label for="filter">Filter</label> -->
+                <select id="filter" name="filter" class="form-control form-control-sm"
+                  sytle="select.form-control {padding: 2px;}" value="{{ request.args.filter }}">
+                  <option value="" sytle="padding-right:0" {% if request.args.filter=='' %} selected {% endif %}>
+                  </option>
+                  <option value="1" sytle="padding-right:0" {% if request.args.filter=='1' %} selected {% endif %}>1 g
+                  </option>
+                  <option value="2" sytle="padding-right:0" {% if request.args.filter=='2' %} selected {% endif %}>2 r
+                  </option>
+                  <option value="3" sytle="padding-right:0" {% if request.args.filter=='3' %} selected {% endif %}>3 i
+                  </option>
+
+                </select>
+                <!-- </div> -->
+              </th>
+              <th>
+                <!-- <label for="ra">ra</label> -->
+                <input type="text" class="form-control form-control-sm" id="ra" name="ra" value="{{ request.args.ra }}">
+              </th>
+              <th>
+                <!-- <label for="dec">dec</label> -->
+                <input type="text" class="form-control form-control-sm" id="dec" name="dec"
+                  value="{{ request.args.dec }}">
+              </th>
+              <th>
+                <!-- <label for="magpsf">magpsf</label> -->
+                <input type="text" class="form-control form-control-sm" id="magpsf" name="magpsf"
+                  value="{{ request.args.magpsf }}">
+              </th>
+              <th title="magap">
+                <!-- <label for="magap_">magap</label> -->
+                <input type="text" class="form-control form-control-sm" id="magap" name="magap"
+                  value="{{ request.args.magap }}">
+              </th>
+            </tr>
+            <!-- </form> -->
+            <!-- <button type="submit" class="btn btn-primary"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+            <a href="/" class="btn btn-secondary">Reset</a> -->
+
+          </thead>
+          <tbody>
+
+            {% for alert in table %}
+            <tr>
+              <!-- <td><a href="/{#{ alert.lco_id }}/" title="{{ alert.lco_id }}">{{ alert.lco_id }#}</a></td> -->
+              <td>{{ alert.date }}</td>
+              <td>{{ alert.candid }}</td>
+              <td>
+                <a href="#myModal" data-toggle="modal" data-target="#objectIdModal" data-object-id="{{ alert.objectId }}" data-date="{{ alert.date }}" data-candid="{{ alert.candid }}"">{{ alert.objectId }}</a>
+              </td>
+              <td>{{ alert.jd }}</td>
+              <!-- <td>{#{ alert.candidate.wall_time.strftime('%Y-%m-%d %H:%M:%S') }#}</td> -->
+              <td>{{ alert.filter }}</td>
+              <td>{{ '%.5f'|format(alert.ra) }}</td>
+              <td>{{ '%.5f'|format(alert.dec) }}</td>
+              <td>{{ '%.2f'|format(alert.mgpsf) }}</td>
+              <td>{{ '%.2f'|format(alert.magap) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-2">
+      <br><br><br><!-- TODO: Style/pad insted -->
+      <button type="submit" class="btn btn-primary">
+        <i class="fa fa-filter fa-lg" title="Filter" aria-label="Filter"></i> Filter
+      </button>
+      <!-- <a href="/" class="btn btn-secondary">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-filter fa-stack-1x" style="font-size:22px" aria-hidden="true"></i>
+        <i class="fa fa-ban fa-stack-2x text-danger" style="-webkit-text-stroke: 1px background-color;"
+          aria-hidden="true"></i>
+      </span></a> -->
+      <a href="/" class="btn btn-danger">
+        <i class="fa fa-close fa-lg" title="Clear" aria-label="Clear"></i> Clear
+      </a>
+    </div>
+
+  </div>
+</form>
+
+<!-- Modal -->
+<div class="modal fade" id="objectIdModal" tabindex="-1" role="dialog" aria-labelledby="objectIdModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="objectIdModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <span name="object-id-label">Candid: </span>
+          <span style="position:absolute; right:0; margin-right: 16px;" name="date-label">Date: </span></p> <!-- TODO: position properly -->
+        <p>
+          <img name="object-id-image"  /><br>
+          <img name="object-id-plot"  />
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'common_js.html' %}
+<script>
+  //triggered when modal is about to be shown
+  $('#objectIdModal').on('show.bs.modal', function(e) {
+    //get data-id attribute of the clicked element and populate text box
+    var objectId = $(e.relatedTarget).data('object-id');
+    var candid = $(e.relatedTarget).data('candid'); // ? TODO: Is candid really neaded? -->
+    var date = $(e.relatedTarget).data('date');
+    // $(e.currentTarget).find('#object-id-label').html(objectId);
+    $('body').find('#objectIdModalLabel').html(objectId); // modal title {# ! TODO: de-mess! #}
+    $('body').find('span[name="object-id-label"]').html("Candid: " + candid); //{# ! TODO: de-mess! #}
+    $('body').find('span[name="date-label"]').html("Date: " + date); //{# ! TODO: de-mess! #}
+    $('body').find('img[name="object-id-image"]').attr("src", "/static/img/_ZTF_lc_plots/"+objectId+".png");
+    $('body').find('img[name="object-id-plot"]').attr("src", "/static/img/_ZTF_cutouts/"+date+"/"+objectId+"_"+candid+".png");
+  });
+</script>
+
+<!-- ! TODO: Extra spacing to make bottom content of the table visible: Something with the main/footer hight is not right here! -->
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+{% endblock %}

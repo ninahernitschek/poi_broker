@@ -1,0 +1,100 @@
+{#
+ # The base layout template
+ # ------------------------
+ #
+ # This template defines the base HTML structure for our site: the doctype, the
+ # `<html>`, `<head>`, `<title>`, and `<body>` tags, plus some `<meta>` tags and
+ # a `<link rel="stylesheet">` tag that includes our main CSS file.
+ #
+ # This is the only place in our templates where we'll ever need to define that
+ # stuff. All other templates will extend this one.
+ #
+ # This template is never accessed directly; instead it is extended by two child
+ # templates:
+ #
+ #   * `_layouts/site.html`: A sub-layout, which in turn is extended by all the
+ #                           main site templates.
+ #
+ #   * `offline.html`:       The template that we serve when the site is offline
+ #
+ # Any templates that extend this template can optionally set a `title` variable,
+ # which will be output within the `<title>` tag, before the site name:
+ #
+ #     <title>{% if title is defined %}{{ title }} - {% endif %}CommonSiteName</title>
+ #
+ # They can also optionally set a `bodyClass` variable, which will be output
+ # within the `<body>` tag's `class=` attribute.
+ #
+ #     <body {% if bodyClass is defined %}class="{{ bodyClass }}"{% endif %}>
+ #
+ # This template also defines 3 `block` regions, which child templates are free to
+ # override:
+ #
+ #   * `head`: This block wraps the entire default contents of our `<head>` tag.
+ #             If a child template wishes to add more to the head, they can do so
+ #             like this:
+ #
+ #                 {% block head %}
+ #                     {{ parent() }}
+ #                     <!-- additional stuff -->
+ #                 {% endblock %}
+ #
+ #             Calling `{{ parent() }}` will output the contents of the `head`
+ #             block that are already defined in this template.
+ #
+ #   * `body`: This block is placed directly after the opening `<body>` tag.
+ #             Child templates can use this to define the main body contents.
+ #
+ #   * `foot`: This block is placed directly before the closing `</body>` tag.
+ #             Child templates can use this to include Javascript files, etc.
+ #}
+
+<!doctype html>
+<html lang="en">
+  <head>   
+
+    {% block head %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <title>{% if title is defined %}{{ title }} - {% endif %}Point Of Interest Broker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css">
+    {% endblock %}
+
+    <!-- TODO: update both? favicon -->
+    <link rel="apple-touch-icon" href="/static/favicon.png">
+    <link rel="shortcut icon" type="image/png" href="/static/favicon-trans.png"/>
+    <!-- https://fontawesome.com/v4.7.0/ -->
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+
+    <!-- NOTE: Bootstrap CSS CDN with local fallback (ref: https://stackoverflow.com/a/26198380/8291949) --> <!-- TODO: BS4? -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css">
+    <!-- Bootstrap CSS local fallback -->
+    <script>
+      var test = document.createElement("div")
+      test.className = "hidden d-none"
+  
+      document.head.appendChild(test)
+      var cssLoaded = window.getComputedStyle(test).display === "none"
+      document.head.removeChild(test)
+  
+      if (!cssLoaded) {
+          var link = document.createElement("link");
+  
+          link.type = "text/css";
+          link.rel = "stylesheet";
+          link.href = "/static/css/bootstrap.min.css"; // TODO: Needs to exist
+  
+          document.head.appendChild(link);
+      }
+    </script>
+  </head>
+  <body {#{% if bodyClass is defined %}class="{{ bodyClass }}"{% endif %}#}>
+    <!-- main CONTENT -->
+    {% block body %}{% endblock %}
+    <!-- Extendable Footer -->
+    {% block foot %}{% endblock %}
+    <!-- Default Javascript at the end (as recommended) -->
+    {#% include 'common_js.html' %#} <!-- TODO: currently in site: -->>
+</body>
+</html>
