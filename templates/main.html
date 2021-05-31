@@ -26,7 +26,6 @@
           <!-- e.g. ?sort_value=jd&sort_order=desc&objectId=&candid=&time__gt=2021-02-28&time__lt=&time__since=&jd__gt=&jd__lt=&filter=&cone=&objectcone=&objectidps=&ra__gt=&ra__lt=&dec__gt=&dec__lt=&l__gt=&l__lt=&b__gt=&b__lt=&magpsf__gte=&magpsf__lte=&sigmapsf__lte=&magap__gte=&magap__lte=&distnr__gte=&distnr__lte=&deltamaglatest__gte=&deltamaglatest__lte=&deltamagref__gte=&deltamagref__lte=&elong__lte=&nbad__lte=&rb__gte=&drb__gte=&classtar__gte=&classtar__lte=&fwhm__lte= -->
           <!-- <div class="col"> -->
           <!-- Buttons are disabled via CSS based on page no. and has_next -->
-          <!-- END TODO>
           <a href="/?{{ query_string }}&page={{ page - 1 }}" class="btn btn-primary {% if page == 1 %}disabled{% endif %}"><i class="fa fa-caret-left fa-lg" title="Filter" aria-label="Previous"></i> Prev</a>
           <a href="/?{{ query_string }}&page={{ page + 1 }}" class="btn btn-primary {% if has_next == False %}disabled{% endif %}">Next <i class="fa fa-caret-right fa-lg" title="Next" aria-label="Next"></i></a>
           <!-- </div>
