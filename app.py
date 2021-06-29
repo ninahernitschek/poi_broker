@@ -73,7 +73,7 @@ def start():
     page = request.args.get('page', 1, type=int)
 
     data = []
-
+    filter_warning_message = ''
     if request.method == 'GET':
         query = db.session.query(Ztf)
         # Return alerts with a brightness greater than the given value. Ex: ?magpsf=17,18 (range:17-18)
@@ -82,7 +82,8 @@ def start():
             date_input = extract_numbers(request.args.get('date'))
             if date_input != None:
                 query = extract_float_filter(date_input, Ztf.date, query)
-
+            else:
+                 filter_warning_message = 'date filter value cannot be applied. '
         if request.args.get('candid'):
             query = query.filter(Ztf.candid == int(request.args.get('candid')))
 
@@ -93,6 +94,8 @@ def start():
             jd_input = extract_numbers(request.args.get('jd'))
             if jd_input != None:
                 query = extract_float_filter(jd_input, Ztf.jd, query)
+            else:
+                 filter_warning_message = 'jd filter value cannot be applied. '
 
         if request.args.get('filter'):
             query = query.filter(Ztf.filter == int(request.args.get('filter'))) # 1:g, 2:r, 3:i
@@ -101,21 +104,29 @@ def start():
             ra_input = extract_numbers(request.args.get('ra'))
             if ra_input != None:
                 query = extract_float_filter(ra_input, Ztf.ra, query)
+            else:
+                 filter_warning_message = 'ra filter value cannot be applied. '
 
         if request.args.get('dec'):
             dec_input = extract_numbers(request.args.get('dec'))
             if dec_input != None:
                 query = extract_float_filter(dec_input, Ztf.dec, query)
+            else:
+                 filter_warning_message = 'dec filter value cannot be applied. '
 
         if request.args.get('magpsf'):
             magpsf_input = extract_numbers(request.args.get('magpsf'))
             if magpsf_input != None:
                 query = extract_float_filter(magpsf_input, Ztf.mgpsf, query)
+            else:
+                 filter_warning_message = 'magpsf filter value cannot be applied. '
 
         if request.args.get('magap'):
             magap_input = extract_numbers(request.args.get('magap'))
             if magap_input != None:
                 query = extract_float_filter(magap_input, Ztf.magap, query)
+            else:
+                 filter_warning_message = 'magap filter value cannot be applied. '
 
         #latest = db.session.query(Ztf).order_by(Ztf.jd.desc()).first() # ? to show latest update date
         paginator = query.paginate(page, 100, True)
@@ -132,7 +143,8 @@ def start():
         table=paginator.items,
         page=paginator.page,
         has_next=paginator.has_next,
-        query_string=re.sub('&page=\\d+', '', request.query_string.decode('ascii'))# ? b'' binary string
+        filter_warning = filter_warning_message,
+        query_string=re.sub('&page=\\d+', '', request.query_string.decode('ascii'))# ? b'' binary string 
     )
 
 if __name__ == "__main__":

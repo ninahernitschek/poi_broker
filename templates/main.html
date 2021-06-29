@@ -13,6 +13,12 @@
     </p>
   </div>
 </div>
+<!-- This is our general Bootstrap alert div -->
+{% if filter_warning |length > 0 %}
+<div class="alert alert-warning" role="alert">
+  {{ filter_warning }}
+</div>
+{% endif %}
 <form method="GET" action="/">
   <div class="row">
 
@@ -118,7 +124,7 @@
               <th title = "Enter a specific candid">candid</th>
               <th title = "Enter a specific objectId">objectId</th>
               <th title="Julian Date - Enter a specific jd or enter a range with a space between the two values">jd</th>
-              <th>filter</th>
+              <th title="ZTF filter g,r,i">filter</th>
               <th title="degrees - Enter a specific ra or enter a range with a space between the two values">ra</th>
               <th title="degrees - Enter a specific dec or enter a range with a space between the two values">dec</th>
               <th title="point-spread function (PSF) magnitude - Enter a specific magpsf or enter a range with a space between the two values">magpsf</th>
