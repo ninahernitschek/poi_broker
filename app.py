@@ -73,7 +73,7 @@ def start():
     page = request.args.get('page', 1, type=int)
 
     data = []
-
+    filter_warning_message = ''
     if request.method == 'GET':
         query = db.session.query(Ztf)
         # Return alerts with a brightness greater than the given value. Ex: ?magpsf=17,18 (range:17-18)
@@ -82,7 +82,8 @@ def start():
             date_input = extract_numbers(request.args.get('date'))
             if date_input != None:
                 query = extract_float_filter(date_input, Ztf.date, query)
-
+            else:
+                 filter_warning_message = 'date filter value cannot be applied. '
         if request.args.get('candid'):
             query = query.filter(Ztf.candid == int(request.args.get('candid')))
 
@@ -132,7 +133,8 @@ def start():
         table=paginator.items,
         page=paginator.page,
         has_next=paginator.has_next,
-        query_string=re.sub('&page=\\d+', '', request.query_string.decode('ascii'))# ? b'' binary string
+        filter_warning = filter_warning_message,
+        query_string=re.sub('&page=\\d+', '', request.query_string.decode('ascii'))# ? b'' binary string 
     )
 
 if __name__ == "__main__":

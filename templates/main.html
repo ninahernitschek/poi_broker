@@ -13,6 +13,12 @@
     </p>
   </div>
 </div>
+<!-- This is our general Bootstrap alert div -->
+{% if filter_warning |length > 0 %}
+<div class="alert alert-warning" role="alert">
+  {{ filter_warning }}
+</div>
+{% endif %}
 <form method="GET" action="/">
   <div class="row">
 
