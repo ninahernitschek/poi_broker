@@ -83,9 +83,14 @@ def start():
             if date_input != None:
                 query = extract_float_filter(date_input, Ztf.date, query)
             else:
-                 filter_warning_message = 'date filter value cannot be applied. '
+                 filter_warning_message = 'Date filter cannot be applied - Enter a valid 8-digit integer date of the form yyyymmdd, e.g. “20201207”. '
+
         if request.args.get('candid'):
-            query = query.filter(Ztf.candid == int(request.args.get('candid')))
+            candid_input = extract_numbers(request.args.get('candid'))
+            if candid_input != None:
+                query = extract_float_filter(candid_input, Ztf.candid, query)
+            else:
+                 filter_warning_message = 'Candid filter cannot be applied - Enter a valid integer, e.g. “1436374650315010006”. '
 
         if request.args.get('objectId'):
             query = query.filter(Ztf.objectId == request.args.get('objectId'))
@@ -95,7 +100,7 @@ def start():
             if jd_input != None:
                 query = extract_float_filter(jd_input, Ztf.jd, query)
             else:
-                 filter_warning_message = 'jd filter value cannot be applied. '
+                 filter_warning_message = 'Jd filter cannot be applied - Enter a valid number, e.g., "2459190.8746528”. '
 
         if request.args.get('filter'):
             query = query.filter(Ztf.filter == int(request.args.get('filter'))) # 1:g, 2:r, 3:i
@@ -105,28 +110,28 @@ def start():
             if ra_input != None:
                 query = extract_float_filter(ra_input, Ztf.ra, query)
             else:
-                 filter_warning_message = 'ra filter value cannot be applied. '
+                 filter_warning_message = 'Ra filter cannot be applied - Enter a valid number, e.g., “118.61421”. '
 
         if request.args.get('dec'):
             dec_input = extract_numbers(request.args.get('dec'))
             if dec_input != None:
                 query = extract_float_filter(dec_input, Ztf.dec, query)
             else:
-                 filter_warning_message = 'dec filter value cannot be applied. '
+                 filter_warning_message = 'Dec filter cannot be applied - Enter a valid number, e.g., "-20.02131". '
 
         if request.args.get('magpsf'):
             magpsf_input = extract_numbers(request.args.get('magpsf'))
             if magpsf_input != None:
                 query = extract_float_filter(magpsf_input, Ztf.mgpsf, query)
             else:
-                 filter_warning_message = 'magpsf filter value cannot be applied. '
+                 filter_warning_message = 'Magpsf filter cannot be applied - Enter a valid number, e.g., "18.84". '
 
         if request.args.get('magap'):
             magap_input = extract_numbers(request.args.get('magap'))
             if magap_input != None:
                 query = extract_float_filter(magap_input, Ztf.magap, query)
             else:
-                 filter_warning_message = 'magap filter value cannot be applied. '
+                 filter_warning_message = 'Magap filter cannot be applied - Enter a valid number, e.g., "19.49". '
 
         #latest = db.session.query(Ztf).order_by(Ztf.jd.desc()).first() # ? to show latest update date
         paginator = query.paginate(page, 100, True)
