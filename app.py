@@ -88,7 +88,7 @@ def start():
         if request.args.get('candid'):
             candid_input = extract_numbers(request.args.get('candid'))
             if candid_input != None:
-                query = extract_float_filter(candid_input, Ztf.candid, query)
+                query = query.filter(Ztf.candid == int(request.args.get('candid')))
             else:
                  filter_warning_message = 'Candid filter cannot be applied - Enter a valid integer, e.g. “1436374650315010006”. '
 
