@@ -83,7 +83,7 @@ def start():
             if date_input != None:
                 query = extract_float_filter(date_input, Ztf.date, query)
             else:
-                 filter_warning_message = 'Date filter cannot be applied - Enter a valid 8-digit integer date of the form yyyymmdd, e.g. “20201207”. You can filter the columns by entering values and then click the "Filter" button.'
+                 filter_warning_message = 'Date filter cannot be applied - Enter a valid 8-digit integer date of the form yyyymmdd, e.g. “20201207”, or range, e.g., "20201207 20201209". You can filter the columns by entering values and then click the "Filter" button.'
 
         if request.args.get('candid'):
             candid_input = extract_numbers(request.args.get('candid'))
