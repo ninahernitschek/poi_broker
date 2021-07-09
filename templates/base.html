@@ -88,6 +88,23 @@
           document.head.appendChild(link);
       }
     </script>
+     <style>
+      .headerSortDown:after {
+        content: '';
+        position: relative;
+        left: 10px;
+        border: 8px solid transparent;
+      }
+      
+      .headerSortDown:after {
+        top: 12px;
+        border-top-color: grey;
+      }
+    
+      .headerSortDown {
+          padding-right: 10px;
+      }
+          </style>
   </head>
   <body {#{% if bodyClass is defined %}class="{{ bodyClass }}"{% endif %}#}>
     <!-- main CONTENT -->
