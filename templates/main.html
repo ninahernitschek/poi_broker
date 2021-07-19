@@ -117,7 +117,7 @@
 
         </div>
 
-        <table class="table table-sm table-striped">
+        <table id="myTable" class="table table-sm table-striped table-sortable"> 
           <thead>
             <tr>
               <th class="sortable" title='Enter a specific date or enter a range, and click the "Filter" button.  Value ranges can be entered like: >20201208, <20201210, or 20201207 20201209'>date</th>
@@ -305,6 +305,101 @@
       $this.addClass('desc');
     }
   });
+
+
+  var header = document.getElementsByTagName('th');
+
+    for (let c = 0; c < header.length; c++) {
+
+      header[c].addEventListener('click', item(c))
+    }
+
+    function item(c) {
+      return function () {
+        var $this = $(this);
+        var asc = $this.hasClass('asc');
+        var desc = $this.hasClass('desc');
+        if (asc) {
+          sortTableAsc(c);
+        }
+        if (desc) {
+          sortTableDesc(c);
+        }
+      }
+    }
+
+
+    function sortTableAsc(c) {
+      var table, rows, switching, i, x, y, shouldSwitch;
+      table = document.getElementById("myTable");
+      switching = true;
+      /*Make a loop that will continue until
+      no switching has been done:*/
+      while (switching) {
+        //start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /*Loop through all table rows (except the
+        first, which contains table headers):*/
+        for (i = 1; i < (rows.length - 1); i++) {
+          //start by saying there should be no switching:
+          shouldSwitch = false;
+          /*Get the two elements you want to compare,
+          one from current row and one from the next:*/
+          x = rows[i].getElementsByTagName("TD")[c];
+          y = rows[i + 1].getElementsByTagName("TD")[c];
+          //check if the two rows should switch place:
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            //if so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          /*If a switch has been marked, make the switch
+          and mark that a switch has been done:*/
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+        }
+      }
+    }
+
+    function sortTableDesc(c) {
+      var table, rows, switching, i, x, y, shouldSwitch;
+      table = document.getElementById("myTable");
+      switching = true;
+      /*Make a loop that will continue until
+      no switching has been done:*/
+      while (switching) {
+        //start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /*Loop through all table rows (except the
+        first, which contains table headers):*/
+        for (i = 1; i < (rows.length - 1); i++) {
+          //start by saying there should be no switching:
+          shouldSwitch = false;
+          /*Get the two elements you want to compare,
+          one from current row and one from the next:*/
+          x = rows[i].getElementsByTagName("TD")[c];
+          y = rows[i + 1].getElementsByTagName("TD")[c];
+          //check if the two rows should switch place:
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            //if so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          /*If a switch has been marked, make the switch
+          and mark that a switch has been done:*/
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+        }
+      }
+    }
+  
+
 </script>
 
 <!-- ! TODO: Extra spacing to make bottom content of the table visible: Something with the main/footer hight is not right here! -->
