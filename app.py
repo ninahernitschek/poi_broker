@@ -187,7 +187,7 @@ def extract_filter(input_field, db_field, query, convert_callback):
         else:
             query = query.filter(db_field == convert_callback(input_field[0]))
     else: #2 inputs
-        input_field.sort()  #REM: Ensure >min <max order
+        input_field.sort()  #REM: Ensure >min <max order 
         query = query.filter(db_field >= convert_callback(input_field[0]))
         query = query.filter(db_field <= convert_callback(input_field[1]))
     return query
