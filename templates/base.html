@@ -61,9 +61,6 @@
     <link rel="stylesheet" type="text/css" href="/static/css/base.css">
     {% endblock %}
 
-    <!--Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
     <!-- TODO: update both? favicon -->
     <link rel="apple-touch-icon" href="/static/favicon.png">
     <link rel="shortcut icon" type="image/png" href="/static/favicon-trans.png"/>
@@ -91,33 +88,6 @@
           document.head.appendChild(link);
       }
     </script>
-    <!--Style for table sort indicators-->
-     <style>
-      th.sortable {
-        position: relative;
-      }
-
-      th.sortable::after {
-        font-family: FontAwesome;
-        content: "\f0dc";
-        position: absolute;
-        right: 12px;
-        color: #999;
-      }
-
-      th.sortable.asc::after {
-        content: "\f0d8";
-      }
-
-      th.sortable.desc::after {
-        content: "\f0d7";
-      }
-
-      th.sortable:hover::after {
-        color: #333;
-      }
-    </style> 
-
   </head>
   <body {#{% if bodyClass is defined %}class="{{ bodyClass }}"{% endif %}#}>
     <!-- main CONTENT -->
@@ -125,6 +95,6 @@
     <!-- Extendable Footer -->
     {% block foot %}{% endblock %}
     <!-- Default Javascript at the end (as recommended) -->
-    {#% include 'common_js.html' %#} <!-- TODO: currently in site: -->>
+    {#% include 'common_js.html' %#} <!-- TODO: currently in site: -->
 </body>
 </html>
