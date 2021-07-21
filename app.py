@@ -69,7 +69,7 @@ def start():
     #app.logger.warning('Warn')
     #logging.error('Exception occurred', exc_info=True) #or: logging.exception()
     logging.info('Request with request_args:' + json.dumps(request.args))
-
+    #pdb.set_trace()
     page = request.args.get('page', 1, type=int)
 
     data = []
@@ -77,20 +77,20 @@ def start():
     if request.method == 'GET':
         query = db.session.query(Ztf)
         # Return alerts with a brightness greater than the given value. Ex: ?magpsf=17,18 (range:17-18)
-        #pdb.set_trace()
+        
         if request.args.get('date'):
             date_input = extract_numbers(request.args.get('date'))
             if date_input != None:
                 query = extract_float_filter(date_input, Ztf.date, query)
             else:
-                 filter_warning_message = 'Date filter cannot be applied - Enter a valid 8-digit integer date of the form yyyymmdd, e.g. “20201207”, or range, e.g., "20201207 20201209". You can filter the columns by entering values and then click the "Filter" button.'
+                filter_warning_message += 'Date filter cannot be applied - Enter a valid 8-digit integer date of the form yyyymmdd, e.g. "20201207", or range, e.g., "20201207 20201209". You can filter the columns by entering values and then click the "Filter" button.'
 
         if request.args.get('candid'):
             candid_input = extract_numbers(request.args.get('candid'))
             if candid_input != None:
                 query = query.filter(Ztf.candid == int(request.args.get('candid')))
             else:
-                 filter_warning_message = 'Candid filter cannot be applied - Enter a valid integer, e.g. “1436374650315010006”. You can filter the columns by entering values and then click the "Filter" button.'
+                 filter_warning_message += 'Candid filter cannot be applied - Enter a valid integer, e.g. "1436374650315010006". You can filter the columns by entering values and then click the "Filter" button.'
 
         if request.args.get('objectId'):
             query = query.filter(Ztf.objectId == request.args.get('objectId'))
@@ -100,7 +100,7 @@ def start():
             if jd_input != None:
                 query = extract_float_filter(jd_input, Ztf.jd, query)
             else:
-                 filter_warning_message = 'Jd filter cannot be applied - Enter a valid number, e.g., "2459190.8746528”, or range, e.g., "2459190.84 2459190.86". You can filter the columns by entering values and then click the "Filter" button.'
+                filter_warning_message += 'Jd filter cannot be applied - Enter a valid number, e.g., "2459190.8746528", or range, e.g., "2459190.84 2459190.86". You can filter the columns by entering values and then click the "Filter" button.'
 
         if request.args.get('filter'):
             query = query.filter(Ztf.filter == int(request.args.get('filter'))) # 1:g, 2:r, 3:i
@@ -110,28 +110,37 @@ def start():
             if ra_input != None:
                 query = extract_float_filter(ra_input, Ztf.ra, query)
             else:
-                 filter_warning_message = 'Ra filter cannot be applied - Enter a valid number, e.g., “118.61421”, or range, e.g., "80 90". You can filter the columns by entering values and then click the "Filter" button.'
+                filter_warning_message += 'Ra filter cannot be applied - Enter a valid number, e.g., "118.61421", or range, e.g., "80 90". You can filter the columns by entering values and then click the "Filter" button.'
 
         if request.args.get('dec'):
             dec_input = extract_numbers(request.args.get('dec'))
             if dec_input != None:
                 query = extract_float_filter(dec_input, Ztf.dec, query)
             else:
-                 filter_warning_message = 'Dec filter cannot be applied - Enter a valid number, e.g., "-20.02131", or range, e.g., "18.8 19.4". You can filter the columns by entering values and then click the "Filter" button.'
+                filter_warning_message += 'Dec filter cannot be applied - Enter a valid number, e.g., "-20.02131", or range, e.g., "18.8 19.4". You can filter the columns by entering values and then click the "Filter" button.'
 
         if request.args.get('magpsf'):
             magpsf_input = extract_numbers(request.args.get('magpsf'))
             if magpsf_input != None:
                 query = extract_float_filter(magpsf_input, Ztf.mgpsf, query)
             else:
-                 filter_warning_message = 'Magpsf filter cannot be applied - Enter a valid number, e.g., "18.84", or range, e.g., "18.8 19.4". You can filter the columns by entering values and then click the "Filter" button.'
+                filter_warning_message += 'Magpsf filter cannot be applied - Enter a valid number, e.g., "18.84", or range, e.g., "18.8 19.4". You can filter the columns by entering values and then click the "Filter" button.'
 
         if request.args.get('magap'):
             magap_input = extract_numbers(request.args.get('magap'))
             if magap_input != None:
                 query = extract_float_filter(magap_input, Ztf.magap, query)
             else:
-                 filter_warning_message = 'Magap filter cannot be applied - Enter a valid number, e.g., "19.49", or range, e.g., "18.8 19.4". You can filter the columns by entering values and then click the "Filter" button.'
+                filter_warning_message += 'Magap filter cannot be applied - Enter a valid number, e.g., "19.49", or range, e.g., "18.8 19.4". You can filter the columns by entering values and then click the "Filter" button.'
+
+        #Sample sort order by dec
+        if request.args.get('sort__dec'):
+            sort__dec_order = request.args.get('sort__dec')
+            if sort__dec_order == 'desc':
+                query = query.order_by(Ztf.dec.desc())
+            if sort__dec_order == 'asc':
+                query = query.order_by(Ztf.dec.asc())
+
 
         #latest = db.session.query(Ztf).order_by(Ztf.jd.desc()).first() # ? to show latest update date
         paginator = query.paginate(page, 100, True)
@@ -148,8 +157,8 @@ def start():
         table=paginator.items,
         page=paginator.page,
         has_next=paginator.has_next,
-        filter_warning = filter_warning_message,
-        query_string=re.sub('&page=\\d+', '', request.query_string.decode('ascii'))# ? b'' binary string 
+        query_string=re.sub('&page=\\d+', '', request.query_string.decode('ascii')), # ? b'' binary string
+        filter_warning = filter_warning_message
     )
 
 if __name__ == "__main__":
@@ -187,7 +196,7 @@ def extract_filter(input_field, db_field, query, convert_callback):
         else:
             query = query.filter(db_field == convert_callback(input_field[0]))
     else: #2 inputs
-        input_field.sort()  #REM: Ensure >min <max order 
+        input_field.sort()  #REM: Ensure >min <max order
         query = query.filter(db_field >= convert_callback(input_field[0]))
         query = query.filter(db_field <= convert_callback(input_field[1]))
     return query
