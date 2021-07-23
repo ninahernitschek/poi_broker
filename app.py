@@ -133,13 +133,72 @@ def start():
             else:
                 filter_warning_message += 'Magap filter cannot be applied - Enter a valid number, e.g., "19.49", or range, e.g., "18.8 19.4". You can filter the columns by entering values and then click the "Filter" button.'
 
-        #Sample sort order by dec
+        #Sort order by date
+        if request.args.get('sort__date'):
+            sort__date_order = request.args.get('sort__date')
+            if sort__date_order == 'desc':
+                query = query.order_by(Ztf.date.desc())
+            if sort__date_order == 'asc':
+                query = query.order_by(Ztf.date.asc())
+
+        #Sort order by candid
+        if request.args.get('sort__candid'):
+            sort__candid_order = request.args.get('sort__candid')
+            if sort__candid_order == 'desc':
+                query = query.order_by(Ztf.candid.desc())
+            if sort__candid_order == 'asc':
+                query = query.order_by(Ztf.candid.asc())
+        
+        #Sort order by objectId
+        if request.args.get('sort__objectId'):
+            sort__objectId_order = request.args.get('sort__objectId')
+            if sort__objectId_order == 'desc':
+                query = query.order_by(Ztf.objectId.desc())
+            if sort__objectId_order == 'asc':
+                query = query.order_by(Ztf.objectId.asc())
+
+        #Sort order by jd
+        if request.args.get('sort__jd'):
+            sort__jd_order = request.args.get('sort__jd')
+            if sort__jd_order == 'desc':
+                query = query.order_by(Ztf.jd.desc())
+            if sort__jd_order == 'asc':
+                query = query.order_by(Ztf.jd.asc())
+
+        #Sort order by ra
+        if request.args.get('sort__ra'):
+            sort__ra_order = request.args.get('sort__ra')
+            if sort__ra_order == 'desc':
+                query = query.order_by(Ztf.ra.desc())
+            if sort__ra_order == 'asc':
+                query = query.order_by(Ztf.ra.asc())
+
+        #Sort order by dec
         if request.args.get('sort__dec'):
             sort__dec_order = request.args.get('sort__dec')
             if sort__dec_order == 'desc':
                 query = query.order_by(Ztf.dec.desc())
             if sort__dec_order == 'asc':
                 query = query.order_by(Ztf.dec.asc())
+
+        #Sort order by magpsf
+        if request.args.get('sort__magpsf'):
+            sort__magpsf_order = request.args.get('sort__magpsf')
+            if sort__magpsf_order == 'desc':
+                query = query.order_by(Ztf.magpsf.desc())
+            if sort__magpsf_order == 'asc':
+                query = query.order_by(Ztf.magpsf.asc())
+
+       
+
+        #Sort order by magap
+        if request.args.get('sort__magap'):
+            sort__magap_order = request.args.get('sort__magap')
+            if sort__magap_order == 'desc':
+                query = query.order_by(Ztf.magap.desc())
+            if sort__magap_order == 'asc':
+                query = query.order_by(Ztf.magap.asc())
+
 
 
         #latest = db.session.query(Ztf).order_by(Ztf.jd.desc()).first() # ? to show latest update date
