@@ -185,11 +185,9 @@ def start():
         if request.args.get('sort__magpsf'):
             sort__magpsf_order = request.args.get('sort__magpsf')
             if sort__magpsf_order == 'desc':
-                query = query.order_by(Ztf.magpsf.desc())
+                query = query.order_by(Ztf.mgpsf.desc())
             if sort__magpsf_order == 'asc':
-                query = query.order_by(Ztf.magpsf.asc())
-
-       
+                query = query.order_by(Ztf.mgpsf.asc())
 
         #Sort order by magap
         if request.args.get('sort__magap'):
