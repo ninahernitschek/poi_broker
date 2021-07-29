@@ -295,23 +295,30 @@
       $sortable.on('click', function () {
         var $this = $(this);
         var id = $this.attr('id');
-        console.log(id);
+        //console.log(id);
         var asc = $this.hasClass('asc');
         var desc = $this.hasClass('desc');
+        //clear the table sort indicator of the clicked item
         $sortable.removeClass('asc').removeClass('desc');
-        if (desc || (!asc && !desc)) {
-          $this.addClass('asc');
-          console.log('sort asc');
-          if ('URLSearchParams' in window) {
+
+        if ('URLSearchParams' in window) {
             var searchParams = new URLSearchParams(window.location.search);
+            //first, clear all sort__ URL params
+            searchParams.forEach(function(value, key) {
+              console.log(key, value);
+              if(key.startsWith("sort__")) {
+                searchParams.delete(key);
+              }
+            });
+
+          if (desc || (!asc && !desc)) {
+            $this.addClass('asc');
+            //console.log('sort asc');
             searchParams.set("sort__"+id, "asc");
             window.location.search = searchParams.toString();
-          }
-        } else {
-          $this.addClass('desc');
-          console.log('sort desc');
-          if ('URLSearchParams' in window) {
-            var searchParams = new URLSearchParams(window.location.search);
+          } else {
+            $this.addClass('desc');
+            //console.log('sort desc');
             searchParams.set("sort__"+id, "desc");
             window.location.search = searchParams.toString();
           }
