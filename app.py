@@ -63,6 +63,16 @@ class Ztf(db.Model):
 #import db_access
 #v1: Access SQLite via SQLAlchemy -> flask-sqlalchemy
 
+#Jinja Filter
+@app.template_filter('astro_filter')
+def astro_filter(num):
+    if (num == 1):
+        return "g"
+    elif (num == 2):
+        return "r"
+    elif (num == 3):
+        return "i"
+
 @app.route('/', methods=['GET', 'POST'])
 def start():
     #app.logger.info('Info')
