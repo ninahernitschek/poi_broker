@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Page</title>
+</head>
+<body>
+    <h1>Help Page</h1>
+
+    <h2>Descriptions of Table Values</h2>
+    <ul>
+        <li>Date: The date of the alert.</li>
+        <li>Candid: This is a "candidate ID", and it is unique to an alert.</li>
+        <li>ObjectId: This is the "object ID", an ID for a specific astronomical object (a star, an asteroid...). Each objectId could exist multiple times, as there can be many candid for an objectId - for example, an object is observed on two nights, then it has two candid.</li>
+        <li>Jd: This is the precise time of the observation, given in Julian date.</li>
+        <li>Filter: This is the astronomical filter used. Astronomical observations are done through filters (like for photography, or like sunglasses are filters). ZTF is using the g,r,i filters. </li>
+        <li>Ra, Dec: These are the astronomical coordinates "Right ascension" and "Declination" from the Equatorial coordinate system.</li>
+        <li>Magpsf, Magap: These are astronomical magnitudes. In case you are not familiar with this: In astronomy, the brightness of an object (star, asteroid...) is measured in "magnitudes". The higher the magnitude, the fainter the object is; so, for example, 22 mag is very faint, 8 mag is quite bright.</li>
+    </ul>
+
+    <h2>Available Filters</h2>
+    <ul>
+        <li>You can filter the columns by entering values and then click the "Filter" button.</li>
+        <li>You can enter a specific value for the columns date, candid, objectId. You can also enter ranges in fields such as "magpf",  Enter one of the following:</li>
+        <ol>
+            <li>>18</li>
+            <li><18</li>
+            <li>18.8 19.4</li>
+        </ol>
+        <li>You can also filter the columns by clicking the sort indicators to sort in either ascending or descending order. </li>
+    </ul>
+
+    <a href="main.html">Return to Home Page</a>
+</body>
+</html>
