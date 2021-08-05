@@ -5,9 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help Page</title>
+
+    <!-- Styling-->
+    <style>
+        .header{
+            position: relative;
+            top: 0;
+            text-align: center;
+            width: 100%;
+            height: 75px; /* Set the fixed height of the footer here */
+            line-height: 60px; /* Vertically center the text there */
+            background-color: #f5f5f5;
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            text-align: center;
+            width: 100%;
+            height: 100px; /* Set the fixed height of the footer here */
+            line-height: 60px; /* Vertically center the text there */
+            background-color: #f5f5f5;
+        }
+    </style>
+    
 </head>
 <body>
-    <h1>Help Page</h1>
+    <div class="header"> 
+        <h1>Help Page</h1>
+    </div>
 
     <h2>Descriptions of Table Values</h2>
     <ul>
@@ -32,6 +57,9 @@
         <li>You can also filter the columns by clicking the sort indicators to sort in either ascending or descending order. </li>
     </ul>
 
-    <a href="main.html">Return to Home Page</a>
+    <div class="footer">
+        <a href="/">Return to Home Page</a>
+    </div>
+
 </body>
 </html>
