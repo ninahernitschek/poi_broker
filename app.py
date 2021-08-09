@@ -73,18 +73,6 @@ def astro_filter(num):
     elif (num == 3):
         return "i"
 
-
-
-@app.template_filter('total_results')
-def total_results(num):
-    return str(num)
-
-
-
-
-
-
-
 @app.route('/', methods=['GET', 'POST'])
 def start():
     #app.logger.info('Info')
@@ -237,6 +225,7 @@ def start():
         table=paginator.items,
         page=paginator.page,
         has_next=paginator.has_next,
+        last_page=paginator.pages,
         query_string=re.sub('&page=\\d+', '', request.query_string.decode('ascii')), # ? b'' binary string
         filter_warning = filter_warning_message
     )
