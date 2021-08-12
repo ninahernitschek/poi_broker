@@ -269,3 +269,96 @@ def extract_filter(input_field, db_field, query, convert_callback):
         query = query.filter(db_field >= convert_callback(input_field[0]))
         query = query.filter(db_field <= convert_callback(input_field[1]))
     return query
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_lightcurve(dflc, lc_plot_folder, objectId):
+    
+	len_good = ( len(  dflc[dflc.isdiffpos.notnull() & (dflc.magnr>0) & (dflc.magpsf>0)] ) )
+	#len_good = ( len(  dflc[dflc.isdiffpos.notnull()] ) )
+	##print ('isdiffpos not null:', len_good)
+	#print( dflc[dflc.isdiffpos.notnull()])
+	
+	if(len_good>1):
+		
+		##print(dflc['distnr'])
+		
+			
+		filter_color = {1:'green', 2:'red', 3:'gold'}
+		#if days_ago:
+			#now = Time.now().jd
+			#t = dflc.jd - now
+			#xlabel = 'Days Ago'
+		#else:
+			#t = dflc.jd
+			#xlabel = 'Time (JD)'
+		
+		t = dflc.jd - 2400000.5
+		
+
+		fig = plt.figure(figsize=(5.5,3))
+		
+		fig.subplots_adjust(left=0.13, right=0.95, top=0.92, bottom=0.17, hspace = 0.4)
+
+		#for fid, color in filter_color.items():
+			## plot detections in this filter:
+			#w = (dflc.fid == fid) & ~dflc.magpsf.isnull()
+			#if np.sum(w):
+				#plt.errorbar(t[w],dflc.loc[w,'dc_mag'], dflc.loc[w,'dc_sigmag'],fmt='.',color=color)
+			#wnodet = (dflc.fid == fid) & dflc.magpsf.isnull()
+			#if np.sum(wnodet):
+				#plt.scatter(t[wnodet],dflc.loc[wnodet,'dc_mag_ulim'], marker='v',color=color,alpha=0.25)
+				#plt.scatter(t[wnodet],dflc.loc[wnodet,'dc_mag_llim'], marker='^',color=color,alpha=0.25)
+		
+		
+		
+		#print('plot_lightcurve')
+		#print(np.max(dflc['distnr']))
+		
+		
+		if (np.max(dflc['distnr']<1.5)):
+					
+						
+			for fid, color in filter_color.items():
+				# plot detections in this filter:
+				w = (dflc.fid == fid) & ~dflc.magpsf.isnull()
+				#print(color)
+				#print(w)
+				#print(np.sum(w))
+				if np.sum(w):
+				#	print('plot')
+					plt.errorbar(t[w],dflc.loc[w,'dc_mag'], dflc.loc[w,'dc_sigmag'],fmt='.',color=color)
+				wnodet = (dflc.fid == fid) & dflc.magpsf.isnull()
+				
+				#print(wnodet)
+				#print(np.sum(wnodet))
+				if np.sum(wnodet):
+				#	print('plot')
+					plt.scatter(t[wnodet],dflc.loc[wnodet,'dc_mag_ulim'], marker='v',color=color,alpha=0.25)
+					plt.scatter(t[wnodet],dflc.loc[wnodet,'dc_mag_llim'], marker='^',color=color,alpha=0.25)
+					
+					plt.ylabel('dc mag')		
+
+		else:
+			
+			for fid, color in filter_color.items():
+				# plot detections in this filter:
+				w = (dflc.fid == fid) & ~dflc.magpsf.isnull()
+				if np.sum(w):
+					plt.errorbar(t[w],dflc.loc[w,'magpsf'], dflc.loc[w,'sigmapsf'],fmt='.',color=color)
+				wnodet = (dflc.fid == fid) & dflc.magpsf.isnull()
+				if np.sum(wnodet):
+					plt.scatter(t[wnodet],dflc.loc[wnodet,'diffmaglim'], marker='v',color=color,alpha=0.25)
+				plt.ylabel('psf mag')		
+					
+		
+		plt.gca().invert_yaxis()
+
+		plt.xlabel('time (MJD)')
+		plt.ylabel('dc Magnitude')		
+		
+		fig.savefig(lc_plot_folder+'/%s.png'%(objectId),dpi = 100)
+		plt.close('all')
+
