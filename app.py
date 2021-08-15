@@ -273,6 +273,15 @@ def extract_filter(input_field, db_field, query, convert_callback):
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+from pathlib import Path
+
+def create_lightcurve():
+    df = pd.read_csv(Ztf.objectId +".csv")
+    foldername = Path("static/img/_ZTF_lc_plots")
+    plot_lightcurve(df, foldername, Ztf.objectId)
+
+
 
 def plot_lightcurve(dflc, lc_plot_folder, objectId):
     
