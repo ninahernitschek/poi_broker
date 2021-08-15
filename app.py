@@ -1,6 +1,6 @@
 ## #!C:\laragon\bin\python\python-3.6.1\python.exe
 from flask import (Flask, render_template, abort, jsonify, request,
-                   redirect, url_for, logging)
+                   redirect, url_for, logging, make_response)
 
 # if app.debug is not True:
 import logging
@@ -229,6 +229,17 @@ def start():
         query_string=re.sub('&page=\\d+', '', request.query_string.decode('ascii')), # ? b'' binary string
         filter_warning = filter_warning_message
     )
+
+app.route('/generate_lightcurve', methods=['GET'])
+def generate_lightcurve():
+    objectId = request.args.get('objectId')
+    
+    #generate lightcurve, store it on the server
+
+    #print('/static/img/_ZTF_lc_plots/'+objectId+'.png')
+    response = make_response('/static/img/_ZTF_lc_plots/'+objectId+'.png', 200)
+    response.mimetype = "text/plain"
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True)
