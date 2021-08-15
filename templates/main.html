@@ -267,9 +267,9 @@
           <img name="object-id-plot"  />
         </p>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer">                       
+        <button type="button" class="btn btn-secondary" onclick="generate_lightcurveJS()">Generate Plot</button>                               
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" onclick="create_lightcurve()">Plot Lightcurve</button>
       </div>
     </div>
   </div>
@@ -346,6 +346,21 @@
             });
           }
     });
+ function generate_lightcurveJS() {
+    var objectId = $('body').find('#objectIdModalLabel').text();
+    var backend_url = '/generate_lightcurve?objectId='+ objectId;
+    //alert(backend_url);
+
+    $.ajax({
+      type: 'GET',
+      url: backend_url,
+      dataType: 'text',
+      complete: function(r){
+        //alert(r.responseText);
+        $('body').find('img[name="object-id-image"]').attr("src", r.responseText);//or trigger loading image again since the url should be the same but image was simply missing
+      }
+    });
+  }
 </script>
 
 <!-- ! TODO: Extra spacing to make bottom content of the table visible: Something with the main/footer hight is not right here! -->
