@@ -230,11 +230,21 @@ def start():
         filter_warning = filter_warning_message
     )
 
+
+
 app.route('/generate_lightcurve', methods=['GET'])
 def generate_lightcurve():
     objectId = request.args.get('objectId')
     
     #generate lightcurve, store it on the server
+    import pandas as pd
+    from pathlib import Path
+
+    my_file = Path('/_ZTF_lightcurves_concat_stream_test/'+objectId+'.csv')
+    if my_file.is_file():
+        df = pd.read_csv(my_file)
+        foldername = Path("/static/img/_ZTF_lc_plots") 
+        plot_lightcurve(df, foldername, objectId)
 
     #print('/static/img/_ZTF_lc_plots/'+objectId+'.png')
     response = make_response('/static/img/_ZTF_lc_plots/'+objectId+'.png', 200)
@@ -284,15 +294,6 @@ def extract_filter(input_field, db_field, query, convert_callback):
 
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
-from pathlib import Path
-
-def create_lightcurve():
-    df = pd.read_csv(Ztf.objectId +".csv")
-    foldername = Path("static/img/_ZTF_lc_plots")
-    plot_lightcurve(df, foldername, Ztf.objectId)
-
-
 
 def plot_lightcurve(dflc, lc_plot_folder, objectId):
     
