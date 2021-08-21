@@ -230,21 +230,21 @@ def start():
         filter_warning = filter_warning_message
     )
 
+import pandas as pd
+from pathlib import Path
 
-
-app.route('/generate_lightcurve', methods=['GET'])
+@app.route('/generate_lightcurve', methods=['GET'])
 def generate_lightcurve():
     objectId = request.args.get('objectId')
-    
+    #pdb.set_trace()
     #generate lightcurve, store it on the server
-    import pandas as pd
-    from pathlib import Path
-
-    my_file = Path('/_ZTF_lightcurves_concat_stream_test/'+objectId+'.csv')
+    my_file = Path('_ZTF_lightcurves_concat_stream_test/'+objectId+'.csv')
     if my_file.is_file():
         df = pd.read_csv(my_file)
-        foldername = Path("/static/img/_ZTF_lc_plots") 
-        plot_lightcurve(df, foldername, objectId)
+        foldername = Path("static/img/_ZTF_lc_plots")
+        
+        dflc = generate_dcmag_lightcurve(df)
+        plot_lightcurve(dflc, foldername, objectId)
 
     #print('/static/img/_ZTF_lc_plots/'+objectId+'.png')
     response = make_response('/static/img/_ZTF_lc_plots/'+objectId+'.png', 200)
@@ -295,8 +295,72 @@ def extract_filter(input_field, db_field, query, convert_callback):
 import numpy as np
 import matplotlib.pyplot as plt
 
+def generate_dcmag_lightcurve(dflc):
+
+	len_good = ( len(  dflc[dflc.isdiffpos.notnull() & (dflc.magnr>0) & (dflc.magpsf>0)] ) )
+	
+	#len_good = ( len(  dflc[dflc.isdiffpos.notnull()] ) )
+	#print ('isdiffpos not null:', len_good)
+	#print( dflc[dflc.isdiffpos.notnull()])
+	
+	if(len_good>1):
+		
+		#print(dflc['distnr'])
+		#print('generate_dcmag_lightcurve')
+		#print(np.max(dflc['distnr']))
+		# confirm that the nearest reference source from ZTF is  coincident
+		if (np.max(dflc['distnr']<1.5)):
+			
+				
+			grp = dflc.groupby(['fid','field','rcid'])
+			#print('grp[magnr]')
+			#print(grp['magnr'])
+			
+			
+			#impute only possible if at min 2 for each fid,field
+			
+			#impute_magnr = grp['magnr'].agg(lambda x: np.median(x[np.isfinite(x)]))
+			try:
+				impute_magnr = grp['magnr'].agg(lambda x: np.median(x[pd.notnull(x)]))
+			
+			
+				#print('impute_magnr: ', impute_magnr)
+			#impute_sigmagnr = grp['sigmagnr'].agg(lambda x: np.median(x[np.isfinite(x)]))
+			
+				impute_sigmagnr = grp['sigmagnr'].agg(lambda x: np.median(x[pd.notnull(x)]))
+				
+				for idx, grpi in grp:
+					#w = np.isnan(grpi['magnr'])
+					
+					w = pd.isnull(grpi['magnr'])
+					
+					w2 = grpi[w].index
+					dflc.loc[w2,'magnr'] = impute_magnr[idx]
+					dflc.loc[w2,'sigmagnr'] = impute_sigmagnr[idx]
+					
+			except:
+				pass
+			
+			#print(impute_sigmagnr)
+
+			
+			dflc['sign'] = 2* (dflc['isdiffpos'] == 't') - 1
+
+			u = (10**(-0.4*dflc['magnr']) + dflc['sign'] * 10**(-0.4*dflc['magpsf'])).astype(np.float64)
+			
+			
+			dflc['dc_mag'] = -2.5 * np.log10(u)
+			dflc['dc_sigmag'] = np.sqrt(
+			(10**(-0.4*dflc['magnr'].astype(np.float64))* dflc['sigmagnr'].astype(np.float64)) **2. + 
+			(10**(-0.4*dflc['magpsf'].astype(np.float64)) * dflc['sigmapsf'].astype(np.float64))**2.) / u
+			dflc['dc_mag_ulim'] = -2.5 * np.log10(10**(-0.4*dflc['magnr'].astype(np.float64)) + 10**(-0.4*dflc['diffmaglim'].astype(np.float64)))
+			dflc['dc_mag_llim'] = -2.5 * np.log10(10**(-0.4*dflc['magnr'].astype(np.float64)) - 10**(-0.4*dflc['diffmaglim'].astype(np.float64)))
+			
+	return dflc	
+
+
 def plot_lightcurve(dflc, lc_plot_folder, objectId):
-    
+	
 	len_good = ( len(  dflc[dflc.isdiffpos.notnull() & (dflc.magnr>0) & (dflc.magpsf>0)] ) )
 	#len_good = ( len(  dflc[dflc.isdiffpos.notnull()] ) )
 	##print ('isdiffpos not null:', len_good)
@@ -379,7 +443,8 @@ def plot_lightcurve(dflc, lc_plot_folder, objectId):
 
 		plt.xlabel('time (MJD)')
 		plt.ylabel('dc Magnitude')		
-		
-		fig.savefig(lc_plot_folder+'/%s.png'%(objectId),dpi = 100)
+		#pdb.set_trace()
+		lc_plot_fullpath = str(lc_plot_folder) + '/%s.png' %(objectId)
+		fig.savefig(lc_plot_fullpath,dpi = 100)
 		plt.close('all')
 
