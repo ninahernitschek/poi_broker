@@ -263,12 +263,11 @@
           <span name="object-id-label">Candid: </span>
           <span style="position:absolute; right:0; margin-right: 16px;" name="date-label">Date: </span></p> <!-- TODO: position properly -->
         <p>
-          <img name="object-id-image"  /><br>
+          <img name="object-id-image" /><br>
           <img name="object-id-plot"  />
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="generate_lightcurveJS()">Generate Plot</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -289,6 +288,9 @@
     $('body').find('span[name="object-id-label"]').html("Candid: " + candid); //{# ! TODO: de-mess! #}
     $('body').find('span[name="date-label"]').html("Date: " + date); //{# ! TODO: de-mess! #}
     $('body').find('img[name="object-id-image"]').attr("src", "/static/img/_ZTF_lc_plots/"+objectId+".png");
+    var csvUrl = "CsvExists('/static/_ZTF_lightcurves_concat_stream_test/"+objectId+".csv')";
+    $('body').find('img[name="object-id-image"]').attr("onerror", csvUrl);
+    //onerror="CsvExists('/static/img/_ZTF_lc_plots/'+$(e.relatedTarget).data('object-id')+'.png')"
     $('body').find('img[name="object-id-plot"]').attr("src", "/static/img/_ZTF_cutouts/"+date+"/"+objectId+"_"+candid+".png");
   });
 </script>
@@ -346,6 +348,33 @@
             });
           }
     });
+
+    function UrlExists(url, cb) {
+      jQuery.ajax({
+          url: url,
+          dataType: 'text',
+          type: 'GET',
+          complete: function (xhr) {
+              if (typeof cb === 'function')
+                  cb.apply(this, [xhr.status]);
+          }
+      });
+  }
+
+  function CsvExists(csv_url) {
+    UrlExists(csv_url, function (status) {
+      if (status === 200) {
+          // if the corresponding csv is available generate plot
+          generate_lightcurveJS();
+      } /*else if (status === 404) {
+          alert('No CSV')
+      } else {
+          // Execute code if status doesn't match above
+          alert('something else happened');
+      }*/
+    });
+  }
+
  function generate_lightcurveJS() {
     var objectId = $('body').find('#objectIdModalLabel').text();
     var backend_url = '/generate_lightcurve?objectId='+ objectId;
