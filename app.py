@@ -238,7 +238,7 @@ def generate_lightcurve():
     objectId = request.args.get('objectId')
     #pdb.set_trace()
     #generate lightcurve, store it on the server
-    my_file = Path('_ZTF_lightcurves_concat_stream_test/'+objectId+'.csv')
+    my_file = Path('static/_ZTF_lightcurves_concat_stream_test/'+objectId+'.csv')
     if my_file.is_file():
         df = pd.read_csv(my_file)
         foldername = Path("static/img/_ZTF_lc_plots")
