@@ -26,12 +26,12 @@ app.config.update(
     DEBUG=True,
     TESTING=True,
     TEMPLATES_AUTO_RELOAD=True,
-    SQLALCHEMY_DATABASE_URI='sqlite:///ztf_alerts_stream_OLD.db',
+    SQLALCHEMY_DATABASE_URI='sqlite:///ztf_alerts_manual.db',
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 )
 db = SQLAlchemy(app)
 class Ztf(db.Model):
-    __tablename__ = 'indextable2'
+    __tablename__ = 'indextable'
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Integer)
     candid = db.Column(db.Integer)
@@ -40,7 +40,7 @@ class Ztf(db.Model):
     filter = db.Column(db.Integer)
     ra = db.Column(db.Float)
     dec = db.Column(db.Float)
-    mgpsf = db.Column(db.Float) #TODO: Map mgpsf <=> magpsf
+    magpsf = db.Column(db.Float)
     magap = db.Column(db.Float)
 
     # @property
@@ -132,7 +132,7 @@ def start():
         if request.args.get('magpsf'):
             magpsf_input = extract_numbers(request.args.get('magpsf'))
             if magpsf_input != None:
-                query = extract_float_filter(magpsf_input, Ztf.mgpsf, query)
+                query = extract_float_filter(magpsf_input, Ztf.magpsf, query)
             else:
                 filter_warning_message += 'Magpsf filter cannot be applied - Enter a valid number, e.g., "18.84", or range, e.g., "18.8 19.4". You can filter the columns by entering values and then click the "Filter" button.'
 
@@ -195,9 +195,9 @@ def start():
         if request.args.get('sort__magpsf'):
             sort__magpsf_order = request.args.get('sort__magpsf')
             if sort__magpsf_order == 'desc':
-                query = query.order_by(Ztf.mgpsf.desc())
+                query = query.order_by(Ztf.magpsf.desc())
             if sort__magpsf_order == 'asc':
-                query = query.order_by(Ztf.mgpsf.asc())
+                query = query.order_by(Ztf.magpsf.asc())
 
         #Sort order by magap
         if request.args.get('sort__magap'):
@@ -238,7 +238,7 @@ def generate_lightcurve():
     objectId = request.args.get('objectId')
     #pdb.set_trace()
     #generate lightcurve, store it on the server
-    my_file = Path('static/_ZTF_lightcurves_concat_stream_test/'+objectId+'.csv')
+    my_file = Path('_ZTF_lightcurves_concat/'+objectId+'.csv')
     if my_file.is_file():
         df = pd.read_csv(my_file)
         foldername = Path("static/img/_ZTF_lc_plots")

@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 
 class Ztf(Base):
-    __tablename__ = 'indextable2'
+    __tablename__ = 'indextable'
     id = Column(Integer, primary_key=True)
     date = Column(Integer)
     candid = Column(Integer)
@@ -18,7 +18,7 @@ class Ztf(Base):
     filter = Column(Integer)
     ra = Column(Float)
     dec = Column(Float)
-    mgpsf = Column(Float)
+    magpsf = Column(Float)
     magap = Column(Float)
 
     # @property
@@ -36,7 +36,7 @@ class Ztf(Base):
 
 
 # Create an engine that stores data in the local sqlite file.
-engine = create_engine('sqlite:///ztf_alerts_stream_OLD.db')
+engine = create_engine('sqlite:///ztf_alerts_manual.db')
  
 # Create all tables in the engine. This is equivalent to "Create Table" # statements in raw SQL.
 #Base.metadata.create_all(engine)
