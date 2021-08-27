@@ -288,7 +288,7 @@
     $('body').find('span[name="object-id-label"]').html("Candid: " + candid); //{# ! TODO: de-mess! #}
     $('body').find('span[name="date-label"]').html("Date: " + date); //{# ! TODO: de-mess! #}
     $('body').find('img[name="object-id-image"]').attr("src", "/static/img/_ZTF_lc_plots/"+objectId+".png");
-    var csvUrl = "CsvExists('/static/_ZTF_lightcurves_concat_stream_test/"+objectId+".csv')";
+    var csvUrl = "CsvExists('/static/_ZTF_lightcurves_concat/"+objectId+".csv')";
     $('body').find('img[name="object-id-image"]').attr("onerror", csvUrl);
     //onerror="CsvExists('/static/img/_ZTF_lc_plots/'+$(e.relatedTarget).data('object-id')+'.png')"
     $('body').find('img[name="object-id-plot"]').attr("src", "/static/img/_ZTF_cutouts/"+date+"/"+objectId+"_"+candid+".png");
