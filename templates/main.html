@@ -258,14 +258,87 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+    <!-- TODO: The selected should default to the first when a new modal is opened and not show the last tab, right? -->
       <div class="modal-body">
-        <p>
-          <span name="object-id-label">Candid: </span>
-          <span style="position:absolute; right:0; margin-right: 16px;" name="date-label">Date: </span></p> <!-- TODO: position properly -->
-        <p>
-          <img name="object-id-image" /><br>
-          <img name="object-id-plot"  />
-        </p>
+        <div role="tabpanel">
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview"
+                  aria-selected="true">Lightcure Overview</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="features-tab" data-toggle="tab" href="#features" role="tab" aria-controls="features"
+                  aria-selected="false">Features</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="classification-tab" data-toggle="tab" href="#classification" role="tab" aria-controls="classification"
+                  aria-selected="false">Classification</a>
+              </li>
+            </ul>
+          </ul>
+          <!-- Tab panes -->
+          <div class="tab-content" id="objectIdModalTabContent">
+              <div role="tabpanel" class="tab-pane fade show active" id="overview" aria-labelledby="overview-tab">
+                <p>
+                  <br>
+                  <span name="object-id-label">Candid: </span>
+                  <span style="position:absolute; right:0; margin-right: 16px;" name="date-label">Date: </span></p> <!-- TODO: position properly -->
+                <p>
+                  <img name="object-id-image" /><br>
+                  <img name="object-id-plot"  />
+                </p>
+
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="features" aria-labelledby="features-tab">   
+                <p>
+                  <br>
+                  <span>Features: </span>
+                </p>
+                <span id="features_output"></span>
+
+                <!-- TODO? nicer output table<table
+                id="features_output_table"
+                data-toggle="table"
+                data-url="http://localhost:5000/query_features?objectId=ZTF18abadunz"> !-- TODO: FIXED FOR DEBUGING --
+                  <thead>
+                    <tr>
+                      <th data-field="A_sf_g" data-sortable="false">A_sf_g</th>
+                      <th data-field="gamma_sf_g" data-sortable="false">gamma_sf_g</th>
+                        <th data-field="A_sf_r" data-sortable="false">A_sf_r</th>
+                        <th data-field="gamma_sf_r" data-sortable="false">gamma_sf_r</th>
+                        <th data-field="sigmaDRW_g" data-sortable="false">sigmaDRW_g</th>
+                        <th data-field="tauDRW_g" data-sortable="false">tauDRW_g</th>
+                        <th data-field="sigmaDRW_r" data-sortable="false">sigmaDRW_r</th>
+                        <th data-field="tauDRW_r" data-sortable="false">tauDRW_r</th>
+                        <th data-field="gr" data-sortable="false">gr</th>
+                        <th data-field="ri" data-sortable="false">ri</th>
+                        <th data-field="A_r" data-sortable="false">A_r</th>
+                        <th data-field="A_g" data-sortable="false">A_g</th>
+                        <th data-field="P" data-sortable="false">P</th>
+                        <th data-field="H1" data-sortable="false">H1</th>
+                        <th data-field="R21" data-sortable="false">R21</th>
+                        <th data-field="R31" data-sortable="false">R31</th>
+                        <th data-field="phi21" data-sortable="false">phi21</th>
+                        <th data-field="phi31" data-sortable="false">phi31</th>
+                        <th data-field="gamma1" data-sortable="false">gamma1</th>
+                        <th data-field="gamma2" data-sortable="false">gamma2</th>
+                        <th data-field="K" data-sortable="false">K</th>
+                        <th data-field="Q31" data-sortable="false">Q31</th>
+                        <th data-field="p10" data-sortable="false">p10</th>
+                        <th data-field="p90" data-sortable="false">p90</th> 
+                    </tr>
+                  </thead>
+                </table> -->
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="classification" aria-labelledby="classification-tab">                
+                <p>
+                  <br>
+                  <span>Classification: </span>
+                </p>
+                <span id="classification_output"></span>
+              </div>
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -281,7 +354,7 @@
   $('#objectIdModal').on('show.bs.modal', function(e) {
     //get data-id attribute of the clicked element and populate text box
     var objectId = $(e.relatedTarget).data('object-id');
-    var candid = $(e.relatedTarget).data('candid'); // ? TODO: Is candid really neaded? -->
+    var candid = $(e.relatedTarget).data('candid');
     var date = $(e.relatedTarget).data('date');
     // $(e.currentTarget).find('#object-id-label').html(objectId);
     $('body').find('#objectIdModalLabel').html(objectId); // modal title {# ! TODO: de-mess! #}
@@ -290,9 +363,52 @@
     $('body').find('img[name="object-id-image"]').attr("src", "/static/img/_ZTF_lc_plots/"+objectId+".png");
     var csvUrl = "CsvExists('/static/_ZTF_lightcurves_concat/"+objectId+".csv')";
     $('body').find('img[name="object-id-image"]').attr("onerror", csvUrl);
-    //onerror="CsvExists('/static/img/_ZTF_lc_plots/'+$(e.relatedTarget).data('object-id')+'.png')"
     $('body').find('img[name="object-id-plot"]').attr("src", "/static/img/_ZTF_cutouts/"+date+"/"+objectId+"_"+candid+".png");
+    $('body').find('img[name="object-id-plot"]').attr("onerror", "this.src='/static/img/_ZTF_lc_plots/missing_file.png';");
+    var features_json = query_features(objectId, candid);
+    var classification_json = query_classification(objectId);
   });
+
+  function query_features(objectId, candid) {
+    let backend_url = `/query_features?objectId=${objectId}&candid=${candid}`;
+    //alert(backend_url);
+    $.ajax({
+      type: 'GET',
+      url: backend_url,
+      dataType: 'json',
+      complete: function(r){
+        console.log(r.responseText);
+        var json_obj = JSON.parse(r.responseText);
+        var fstring = '';
+        for (let key in json_obj) {
+          let value = json_obj[key];
+          //console.log(key, value);
+          fstring += key + ': ' + value + '<br>';
+        }
+        $('body').find('#features_output').html(fstring);
+      }
+    });
+  }
+
+  function query_classification(objectId) {
+    var backend_url = '/query_classification?objectId='+ objectId;
+
+    $.ajax({
+      type: 'GET',
+      url: backend_url,
+      dataType: 'json',
+      complete: function(r){
+        console.log(r.responseText);
+        var json_obj = JSON.parse(r.responseText);
+        var cstring = '';
+        for (let key in json_obj) {
+          let value = json_obj[key];
+          cstring += key + ': ' + value + '<br>';
+        }
+        $('body').find('#classification_output').html(cstring);
+      }
+    });
+  }
 </script>
 
 <script>
@@ -366,12 +482,13 @@
       if (status === 200) {
           // if the corresponding csv is available generate plot
           generate_lightcurveJS();
-      } /*else if (status === 404) {
-          alert('No CSV')
+      } else if (status === 404) {
+          //alert('No CSV')
+          $('body').find('img[name="object-id-image"]').attr("src", "/static/img/_ZTF_lc_plots/missing_file.png")
       } else {
           // Execute code if status doesn't match above
-          alert('something else happened');
-      }*/
+          alert('Something did not work..');
+      }
     });
   }
 
@@ -392,7 +509,7 @@
   }
 </script>
 
-<!-- ! TODO: Extra spacing to make bottom content of the table visible: Something with the main/footer hight is not right here! -->
+<!-- ! TODO: Extra spacing to make bottom content of the table visible: Something with the main/footer hight is not right here! Plz fix -->
 <br>
 <br>
 <br>
