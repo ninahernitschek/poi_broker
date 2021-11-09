@@ -12,6 +12,7 @@ logging.basicConfig(handlers=[logging.FileHandler(filename="app.log",
 import re
 import json
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect
 #import orm
 
 #debug/set_trace breakpoints
@@ -29,6 +30,11 @@ app.config.update(
     SQLALCHEMY_DATABASE_URI='sqlite:///ztf_alerts_manual.db',
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 )
+#TODO: Moce to module
+def object_as_dict(obj):
+    return {c.key: getattr(obj, c.key)
+            for c in inspect(obj).mapper.column_attrs}
+
 db = SQLAlchemy(app)
 class Ztf(db.Model):
     __tablename__ = 'indextable'
@@ -55,6 +61,78 @@ class Ztf(db.Model):
 
     def __str__(self):
         return self.objectId
+
+class Features(db.Model):
+    __tablename__ = 'featuretable'
+    date = db.Column(db.Integer)
+    candid = db.Column(db.Integer)
+    objectId = db.Column(db.String, primary_key=True) #not an actual PK
+    A_sf_g = db.Column(db.Float)
+    gamma_sf_g = db.Column(db.Float)
+    A_sf_r = db.Column(db.Float)
+    gamma_sf_r = db.Column(db.Float)
+    sigmaDRW_g = db.Column(db.Float)
+    tauDRW_g = db.Column(db.Float)
+    sigmaDRW_r = db.Column(db.Float)
+    tauDRW_r = db.Column(db.Float)
+    gr = db.Column(db.Float)
+    ri = db.Column(db.Float)
+    A_r = db.Column(db.Float)
+    A_g = db.Column(db.Float)
+    P = db.Column(db.Float)
+    H1 = db.Column(db.Float)
+    R21 = db.Column(db.Float)
+    R31 = db.Column(db.Float)
+    phi21 = db.Column(db.Float)
+    phi31 = db.Column(db.Float)
+    gamma1 = db.Column(db.Float)
+    gamma2 = db.Column(db.Float)
+    K = db.Column(db.Float)
+    Q31 = db.Column(db.Float)
+    p10 = db.Column(db.Float)
+    p90 = db.Column(db.Float)
+
+class Classification(db.Model):
+    __tablename__ = 'classificationtable'
+    date = db.Column(db.Integer)
+    candid = db.Column(db.Integer)
+    objectId = db.Column(db.String, primary_key=True) #not an actual PK
+    Simbad_name = db.Column(db.String)
+    Simbad_objecttype = db.Column(db.String)
+    PS1_RRL_P = db.Column(db.Float)
+    PS1_RRL_helio_dist = db.Column(db.Float)
+    AllWISE_name = db.Column(db.String)
+    AllWISE_W1mag = db.Column(db.Float)
+    AllWISE_W2mag = db.Column(db.Float)
+    AllWISE_W3mag = db.Column(db.Float)
+    AllWISE_W4mag = db.Column(db.Float)
+    twoMASS_name = db.Column(db.String)
+    twoMASS_angDist = db.Column(db.Float)
+    twoMASS_Jmag = db.Column(db.Float)
+    twoMASS_Hmag = db.Column(db.Float)
+    twoMASS_Kmag = db.Column(db.Float)
+    twoMASS_Qflg = db.Column(db.Float)
+    twoMASS_Rflg = db.Column(db.Float)
+    twoMASS_Aflg = db.Column(db.Float)
+    ASASSN_name = db.Column(db.String)
+    ASASSN_OtherNames = db.Column(db.String)
+    ASASSN_amplitude = db.Column(db.Float)
+    ASASSN_period = db.Column(db.Float)
+    ASASSN_Type = db.Column(db.String)
+    ASASSN_class_probability = db.Column(db.Float)
+    ASASSN_Periodic = db.Column(db.Float)
+    ASASSN_VClassified = db.Column(db.Float)
+    NED_name = db.Column(db.String)
+    NED_ra = db.Column(db.Float)
+    NED_de = db.Column(db.Float) #TODO: Should be NED_dec instead
+    NED_Type = db.Column(db.String)
+    NED_separation_arcmin = db.Column(db.Float)
+    NED_associated = db.Column(db.Float)
+    VSX_OID = db.Column(db.String)
+    VSX_Name = db.Column(db.String)
+    VSX_V = db.Column(db.Integer)
+    VSX_Type = db.Column(db.String)
+
 
 #v0: Access SQLite directly
 #from yourapplication.model import db
@@ -236,19 +314,62 @@ from pathlib import Path
 @app.route('/generate_lightcurve', methods=['GET'])
 def generate_lightcurve():
     objectId = request.args.get('objectId')
-    #pdb.set_trace()
+    print('objectId: ', objectId)
     #generate lightcurve, store it on the server
     my_file = Path('static/_ZTF_lightcurves_concat/'+objectId+'.csv')
+    lc_plot_uri = '/static/img/_ZTF_lc_plots/'+objectId+'.png' #expected result path
     if my_file.is_file():
         df = pd.read_csv(my_file)
         foldername = Path("static/img/_ZTF_lc_plots")
         
         dflc = generate_dcmag_lightcurve(df)
-        plot_lightcurve(dflc, foldername, objectId)
-
+        lc_plot_uri = plot_lightcurve(dflc, foldername, objectId)
+    else:
+        lc_plot_uri = '/static/img/_ZTF_lc_plots/missing_file.png' #missing CSV #TODO: This shoud work now as handled in JS CsvExists(), TEST!
     #print('/static/img/_ZTF_lc_plots/'+objectId+'.png')
-    response = make_response('/static/img/_ZTF_lc_plots/'+objectId+'.png', 200)
+    print(lc_plot_uri)
+    response = make_response(lc_plot_uri, 200)
     response.mimetype = "text/plain"
+    return response
+
+
+
+#NOTE: Features are filter by objectId & candid
+@app.route('/query_features', methods=['GET'])
+def query_features():
+    objectId = request.args.get('objectId')
+    candid = request.args.get('candid')
+    print('objectId: %s; candid: %s' % (objectId, candid))
+
+    feature_query = db.session.query(Features)
+    feature_query = feature_query.filter(Features.objectId == objectId)
+    feature_query = feature_query.filter(Features.candid == candid)
+
+    data = object_as_dict(feature_query.first())
+    print(data)
+    
+    response = app.response_class(
+        response=json.dumps(data), #TODO? array[] with single row when using BootstrapTable?
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+#NOTE: #classification filter by objectId
+@app.route('/query_classification', methods=['GET'])
+def query_classification():
+    objectId = request.args.get('objectId')
+    print('objectId: ', objectId)
+
+    feature_query = db.session.query(Classification)
+    feature_query = feature_query.filter(Classification.objectId == objectId)
+    data = object_as_dict(feature_query.first())
+    
+    response = app.response_class(
+        response=json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
     return response
 
 if __name__ == "__main__":
@@ -298,7 +419,7 @@ import matplotlib.pyplot as plt
 def generate_dcmag_lightcurve(dflc):
 
 	len_good = ( len(  dflc[dflc.isdiffpos.notnull() & (dflc.magnr>0) & (dflc.magpsf>0)] ) )
-	
+	print('len_good: ',  len_good)
 	#len_good = ( len(  dflc[dflc.isdiffpos.notnull()] ) )
 	#print ('isdiffpos not null:', len_good)
 	#print( dflc[dflc.isdiffpos.notnull()])
@@ -360,17 +481,13 @@ def generate_dcmag_lightcurve(dflc):
 
 
 def plot_lightcurve(dflc, lc_plot_folder, objectId):
-	
 	len_good = ( len(  dflc[dflc.isdiffpos.notnull() & (dflc.magnr>0) & (dflc.magpsf>0)] ) )
 	#len_good = ( len(  dflc[dflc.isdiffpos.notnull()] ) )
 	##print ('isdiffpos not null:', len_good)
 	#print( dflc[dflc.isdiffpos.notnull()])
 	
 	if(len_good>1):
-		
-		##print(dflc['distnr'])
-		
-			
+		##print(dflc['distnr'])			
 		filter_color = {1:'green', 2:'red', 3:'gold'}
 		#if days_ago:
 			#now = Time.now().jd
@@ -396,7 +513,6 @@ def plot_lightcurve(dflc, lc_plot_folder, objectId):
 			#if np.sum(wnodet):
 				#plt.scatter(t[wnodet],dflc.loc[wnodet,'dc_mag_ulim'], marker='v',color=color,alpha=0.25)
 				#plt.scatter(t[wnodet],dflc.loc[wnodet,'dc_mag_llim'], marker='^',color=color,alpha=0.25)
-		
 		
 		
 		#print('plot_lightcurve')
@@ -447,4 +563,6 @@ def plot_lightcurve(dflc, lc_plot_folder, objectId):
 		lc_plot_fullpath = str(lc_plot_folder) + '/%s.png' %(objectId)
 		fig.savefig(lc_plot_fullpath,dpi = 100)
 		plt.close('all')
-
+		return lc_plot_fullpath
+	else:
+		return '/' + str(lc_plot_folder).replace('\\', '/') + '/not_enough_data_for_analysis.png'

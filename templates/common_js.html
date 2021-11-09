@@ -2,10 +2,17 @@
 <!-- jQuery CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- jQuery local fallback -->
-<script>window.jQuery || document.write('<script src="/static/js/jquery.min.js"><\/script>')</script>
+<script>
+    window.jQuery || document.write('<script src="/static/js/jquery.min.js"><\/script>')
+</script>
 
 <!-- Bootstrap JS CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/js/bootstrap.min.js"></script> <!-- TODO: UP to 4.3.1-->
 <!-- Bootstrap JS local fallback -->
-<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="/static/js/bootstrap.min.js"><\/script>')}</script>
+<script>
+    if(typeof($.fn.modal) === 'undefined') {document.write('<script src="/static/js/bootstrap.min.js"><\/script>')}
+</script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 {% endblock %}
