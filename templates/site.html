@@ -26,18 +26,18 @@
     </div>
   </nav>
 
-  <main role="main" class="container-fluid">
+  <main role="main" class="container-fluid" style="margin-bottom: 60px;"> <!-- NOTE: Margin bottom in accordance with footer height -->
 
     {% block content %}{% endblock %}
 
   </main>
+  <br>
 
   {% block foot %}
   <footer class="footer">
     <div class="container-fluid">
       <p>
         Thanks to: Deep Thought and my husband.
-        <br/>
         Copyright © 2020 <a href="https://techfreaq.de">Nina</a>. All rights reserved.
         Fork me <a href="https://github.com/" title="source code">on Github</a>
       </p>

@@ -67,7 +67,7 @@
     <!-- https://fontawesome.com/v4.7.0/ -->
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
 
-    <!-- NOTE: Bootstrap CSS CDN with local fallback (ref: https://stackoverflow.com/a/26198380/8291949) --> <!-- TODO: BS4? -->
+    <!-- NOTE: Bootstrap CSS CDN with local fallback (ref: https://stackoverflow.com/a/26198380/8291949) --> <!-- TODO: BS4.3.1: update local files -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
     <!-- Bootstrap CSS local fallback -->
     <script>
@@ -94,7 +94,6 @@
     {% block body %}{% endblock %}
     <!-- Extendable Footer -->
     {% block foot %}{% endblock %}
-    <!-- TODO: Default Javascript at the end (as recommended) -->
-    {% include 'common_js.html' %} <!-- TODO: currently in site: WHY? To derive from base without JS dependencies? -->
+    <!-- NOTE: Default Javascript at the end (as recommended) in the inner most content template that requires JS (%impor does not solve this properly, AFAIK)--> -->
 </body>
 </html>

@@ -6,7 +6,7 @@
       <strong>POI </strong> provides access to alerts.
     </p>
     <p>
-      The following table lists XY alerts.
+      The following table lists alerts.
     </p>
     <p>
       See the <a href="/static/help.html" title="help">help</a> page for descriptions of the table values and available filters.
@@ -23,7 +23,7 @@
   <div class="row">
 
     <div class="col-md-10">
-      <div class="table-responsive">
+      <div class="responsive">
 
         <div class="row justify-content-center">
           <p>
@@ -258,7 +258,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    <!-- TODO: The selected should default to the first when a new modal is opened and not show the last tab, right? -->
+    <!-- ?NOTE: When a new modal is opened the last selected tab is shown, this intended -->
       <div class="modal-body">
         <div role="tabpanel">
           <!-- Nav tabs -->
@@ -297,7 +297,7 @@
                 </p>
                 <span id="features_output"></span>
 
-                <!-- TODO? nicer output table<table
+                <!-- TODO? TBD: nicer output table<table
                 id="features_output_table"
                 data-toggle="table"
                 data-url="http://localhost:5000/query_features?objectId=ZTF18abadunz"> !-- TODO: FIXED FOR DEBUGING --
@@ -346,7 +346,6 @@
     </div>
   </div>
 </div>
-
 
 {% include 'common_js.html' %}
 <script>
@@ -508,13 +507,5 @@
     });
   }
 </script>
-
-<!-- ! TODO: Extra spacing to make bottom content of the table visible: Something with the main/footer hight is not right here! Plz fix -->
-<br>
-<br>
-<br>
-<br>
-<br>
-
 
 {% endblock %}
