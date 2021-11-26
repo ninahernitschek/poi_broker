@@ -285,7 +285,7 @@
                   <span name="object-id-label">Candid: </span>
                   <span style="position:absolute; right:0; margin-right: 16px;" name="date-label">Date: </span></p> <!-- TODO: position properly -->
                 <p>
-                  <img name="object-id-image" /><br>
+                  <img name="object-id-image" /><img name="object-id-legend" src="/static/img/_ZTF_lc_plots/lightcurve_legend.png" /><br>
                   <img name="object-id-plot"  />
                 </p>
 
@@ -296,40 +296,6 @@
                   <span>Features: </span>
                 </p>
                 <span id="features_output"></span>
-
-                <!-- TODO? TBD: nicer output table<table
-                id="features_output_table"
-                data-toggle="table"
-                data-url="http://localhost:5000/query_features?objectId=ZTF18abadunz"> !-- TODO: FIXED FOR DEBUGING --
-                  <thead>
-                    <tr>
-                      <th data-field="A_sf_g" data-sortable="false">A_sf_g</th>
-                      <th data-field="gamma_sf_g" data-sortable="false">gamma_sf_g</th>
-                        <th data-field="A_sf_r" data-sortable="false">A_sf_r</th>
-                        <th data-field="gamma_sf_r" data-sortable="false">gamma_sf_r</th>
-                        <th data-field="sigmaDRW_g" data-sortable="false">sigmaDRW_g</th>
-                        <th data-field="tauDRW_g" data-sortable="false">tauDRW_g</th>
-                        <th data-field="sigmaDRW_r" data-sortable="false">sigmaDRW_r</th>
-                        <th data-field="tauDRW_r" data-sortable="false">tauDRW_r</th>
-                        <th data-field="gr" data-sortable="false">gr</th>
-                        <th data-field="ri" data-sortable="false">ri</th>
-                        <th data-field="A_r" data-sortable="false">A_r</th>
-                        <th data-field="A_g" data-sortable="false">A_g</th>
-                        <th data-field="P" data-sortable="false">P</th>
-                        <th data-field="H1" data-sortable="false">H1</th>
-                        <th data-field="R21" data-sortable="false">R21</th>
-                        <th data-field="R31" data-sortable="false">R31</th>
-                        <th data-field="phi21" data-sortable="false">phi21</th>
-                        <th data-field="phi31" data-sortable="false">phi31</th>
-                        <th data-field="gamma1" data-sortable="false">gamma1</th>
-                        <th data-field="gamma2" data-sortable="false">gamma2</th>
-                        <th data-field="K" data-sortable="false">K</th>
-                        <th data-field="Q31" data-sortable="false">Q31</th>
-                        <th data-field="p10" data-sortable="false">p10</th>
-                        <th data-field="p90" data-sortable="false">p90</th> 
-                    </tr>
-                  </thead>
-                </table> -->
               </div>
               <div role="tabpanel" class="tab-pane fade" id="classification" aria-labelledby="classification-tab">                
                 <p>
@@ -364,8 +330,8 @@
     $('body').find('img[name="object-id-image"]').attr("onerror", csvUrl);
     $('body').find('img[name="object-id-plot"]').attr("src", "/static/img/_ZTF_cutouts/"+date+"/"+objectId+"_"+candid+".png");
     $('body').find('img[name="object-id-plot"]').attr("onerror", "this.src='/static/img/_ZTF_lc_plots/missing_file.png';");
-    var features_json = query_features(objectId, candid);
-    var classification_json = query_classification(objectId);
+    query_features(objectId, candid);
+    query_classification(objectId);
   });
 
   function query_features(objectId, candid) {
@@ -378,20 +344,13 @@
       complete: function(r){
         console.log(r.responseText);
         var json_obj = JSON.parse(r.responseText);
-        var fstring = '';
-        for (let key in json_obj) {
-          let value = json_obj[key];
-          //console.log(key, value);
-          fstring += key + ': ' + value + '<br>';
-        }
-        $('body').find('#features_output').html(fstring);
+        $('body').find('#features_output').html(json2table(json_obj));
       }
     });
   }
 
   function query_classification(objectId) {
     var backend_url = '/query_classification?objectId='+ objectId;
-
     $.ajax({
       type: 'GET',
       url: backend_url,
@@ -399,14 +358,23 @@
       complete: function(r){
         console.log(r.responseText);
         var json_obj = JSON.parse(r.responseText);
-        var cstring = '';
-        for (let key in json_obj) {
-          let value = json_obj[key];
-          cstring += key + ': ' + value + '<br>';
-        }
-        $('body').find('#classification_output').html(cstring);
+        $('body').find('#classification_output').html(json2table(json_obj));
       }
     });
+  }
+
+  function json2table(json_obj) {
+    var stable = '<table class="table table-sm table-striped">';
+        for (let key in json_obj) {
+          if (json_obj[key] != null) {
+            let value = json_obj[key];
+            //console.log(key, value);
+            //fstring += key + ': ' + value + '<br>';
+            stable += `<tr><td>${key}</td><td>${value}</td></tr>`;
+          }
+        }
+        stable += '</table>';
+        return stable;
   }
 </script>
 
