@@ -31,18 +31,28 @@
 </head>
 <body>
     <div class="header"> 
-        <h1>Help Page</h1>
+        <h1>Point of Interest Broker - Help Page</h1>
     </div>
+
+    
+    
+The Point of Interest Broker provides a browser-based interface to the public ZTF alert stream.<br>
+<br>
+Point of Interest allows users to look up alerts and to apply filters to display only a subset of alerts. The alert table can then be downloaded.<br><br>
+
+
 
     <h2>Descriptions of Table Values</h2>
     <ul>
-        <li>Date: The date of the alert.</li>
-        <li>Candid: This is a "candidate ID", and it is unique to an alert.</li>
-        <li>ObjectId: This is the "object ID", an ID for a specific astronomical object (a star, an asteroid...). Each objectId could exist multiple times, as there can be many candid for an objectId - for example, an object is observed on two nights, then it has two candid.</li>
-        <li>Jd: This is the precise time of the observation, given in Julian date.</li>
-        <li>Filter: This is the astronomical filter used. Astronomical observations are done through filters (like for photography, or like sunglasses are filters). ZTF is using the g,r,i filters. </li>
-        <li>Ra, Dec: These are the astronomical coordinates "Right ascension" and "Declination" from the Equatorial coordinate system.</li>
-        <li>Magpsf, Magap: These are astronomical magnitudes. In case you are not familiar with this: In astronomy, the brightness of an object (star, asteroid...) is measured in "magnitudes". The higher the magnitude, the fainter the object is; so, for example, 22 mag is very faint, 8 mag is quite bright.</li>
+        <li>date: The date of the alert</li>
+        <li>candid: ZTF transient candidate, unique to an alert</li>
+        <li>objectID: ZTF identifier for this astronomical object, unique to this object, appears in all alerts for this object</li>
+        <li>jd: observation time at start of exposure, given in Julian date</li>
+        <li>filter: Filter name (g, r, i) derived from fid (1, 2, 3)</li>
+        <li>ra: Right Ascension of candidate; J2000 [deg]</li>
+        <li>dec: Declination of candidate; J2000 [deg]</li>
+        <li>magpsf: Magnitude from PSF-fit photometry measured from difference image [mag]</li>
+        <li>magap: Aperture mag using 8 pixel diameter aperture measured from difference image [mag]</li>
     </ul>
 
     <h2>Available Filters</h2>
@@ -56,10 +66,52 @@
         </ol>
         <li>You can also filter the columns by clicking the sort indicators to sort in either ascending or descending order. </li>
     </ul>
+    
+    
+    
+    <h2>Viewing details of a single alert</h2>
+    Clicking on the objectId of an alert in the main table will bring you to that alert’s detail page.<br>
+    Here you can see a plot of the concatenated light curve, the cutout images, calculated features, and a classification done by cross-matching to existing catalogs.<br>
+    <br>
+    The three cutouts are taken from the .avro file and display the 1x1 arcmin area surrounding the alert.<br><br><br>
+    
+
+
+    Lightcurve data is plotted using a "DC" magnitude calculated from the magpsf value from the ZTF alerts. According to ZTF, "magpsf" reports the flux in the 
+    difference image, and is positive by construction.<br>
+<br>
+    The alert packets can be combined to construct absolute photometric (DC) lightcurves, 
+    for example, for (a)periodic variable sources. Such lightcurves can be computed by 
+    combining the nearest reference image catalog magnitude (magnr), differential magnitude 
+    (magpsf), and isdiffpos (positive or negative difference image detection) as follows:<br>
+<br>
+    mag<sub>DC</sub> = -2.5 log_{10} (10<sup>[-0.4magnr]</sup>+sign10<sup>[-0.4magpsf]</sup>)
+<br>
+    with<br>
+    sign = 1 if isdiffpos = 't'<br>
+    sign = -1 if isdiffpos = 'f'<br>
+    <br>
+    In the light curve plots, upper and lower limit detections are denoted with triangles.<br>
+
+
+    <h3>Light Curve Features</h3>
+
+Light curve features are derived properties of light curves.<br>
+Depending on the number of observations, some features might not be calculated (i.e.: too few observations).<br>
+Only features which can be calculated for this light curve are displayed.<br>
+
+
+
+<h3>Cross-matches</h3>
+
+Cross-matches to various astronomical catalogs are displayed.
+
+    
 
     <div class="footer">
-        <a href="/">Return to Home Page</a>
+        <a href="/">Return to POI Broker</a>
     </div>
 
 </body>
 </html>
+
