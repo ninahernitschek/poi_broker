@@ -70,3 +70,15 @@ th.sortable.desc::after {
 th.sortable:hover::after {
   color: #333;
 }
+
+
+.flexcontainer {
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100vh;
+  display: flex;
+}
+.flexcontainer .btn-holder {
+  justify-content: flex-end;
+  display: flex;
+}

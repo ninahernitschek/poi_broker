@@ -67,6 +67,9 @@
     <!-- https://fontawesome.com/v4.7.0/ -->
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
 
+    <link href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="static/css/jquery.multiselect.css" rel="stylesheet" />
+
     <!-- NOTE: Bootstrap CSS CDN with local fallback (ref: https://stackoverflow.com/a/26198380/8291949) --> <!-- TODO: BS4.3.1: update local files -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
     <!-- Bootstrap CSS local fallback -->
@@ -88,6 +91,11 @@
           document.head.appendChild(link);
       }
     </script>
+
+
+
+    <!-- <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.3.min.js"></script> -->
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.5.1.min.js"></script><!-- TODO: Determine bokeh.js version dynamically -->
   </head>
   <body {#{% if bodyClass is defined %}class="{{ bodyClass }}"{% endif %}#}>
     <!-- main CONTENT -->

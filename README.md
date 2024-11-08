@@ -42,3 +42,4 @@ In case the website isn't displayed: do a
 in your terminal window to see the correct URL
 
 
+Also, inspect the browser developer console (F12) to see if there are any JS errors, ie. a missmatching bokeh.min.js version.

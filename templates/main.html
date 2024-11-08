@@ -21,8 +21,8 @@ alerts.<br>
 <hr>
 <br>
 <br>
-The following table lists ZTF alerts in descending order by JD. Use the arrow buttons for sorting and the filter fields for filtering the table.
-An object's (previous) alerts can be accessed by filtering for the objectId.<br><br>
+The following table lists ZTF alerts in descending order by date_alert_mjd. Use the arrow buttons for sorting and the filter fields for filtering the table.
+An object's (previous) alerts can be accessed by filtering for the ztf_object_id.<br><br>
 
 
 See the help page for descriptions of the table values and available filters.<br>
@@ -51,7 +51,7 @@ See the help page for descriptions of the table values and available filters.<br
         <div class="row justify-content-center">
           <p>
           <!-- TODO: Pagination: arg_str not implemented {{ arg_str }}& -->
-          <!-- e.g. ?sort_value=jd&sort_order=desc&objectId=&candid=&time__gt=2021-02-28&time__lt=&time__since=&jd__gt=&jd__lt=&filter=&cone=&objectcone=&objectidps=&ra__gt=&ra__lt=&dec__gt=&dec__lt=&l__gt=&l__lt=&b__gt=&b__lt=&magpsf__gte=&magpsf__lte=&sigmapsf__lte=&magap__gte=&magap__lte=&distnr__gte=&distnr__lte=&deltamaglatest__gte=&deltamaglatest__lte=&deltamagref__gte=&deltamagref__lte=&elong__lte=&nbad__lte=&rb__gte=&drb__gte=&classtar__gte=&classtar__lte=&fwhm__lte= -->
+          <!-- e.g. ?sort_value=date_alert_mjd&sort_order=desc&ztf_object_id=&alert_id=&time__gt=2021-02-28&time__lt=&time__since=&jd__gt=&jd__lt=&filter=&cone=&objectcone=&objectidps=&ra__gt=&ra__lt=&dec__gt=&dec__lt=&l__gt=&l__lt=&b__gt=&b__lt=&magpsf__gte=&magpsf__lte=&sigmapsf__lte=&magap__gte=&magap__lte=&distnr__gte=&distnr__lte=&deltamaglatest__gte=&deltamaglatest__lte=&deltamagref__gte=&deltamagref__lte=&elong__lte=&nbad__lte=&rb__gte=&drb__gte=&classtar__gte=&classtar__lte=&fwhm__lte= -->
           <!-- <div class="col"> -->
           <!-- Buttons are disabled via CSS based on page no. and has_next -->
           <a href="/?{{ query_string }}&page=1" class="btn btn-primary {% if page == 1 %}disabled{% endif %}"><i class="fa fa-step-backward" aria-hidden="true"></i></i> First</a>
@@ -144,16 +144,17 @@ See the help page for descriptions of the table values and available filters.<br
 
         <table class="table table-sm table-striped">
           <thead>
-            <tr>
+            <tr> <!-- TODO! date vs date_alert_mjd sortable?!  -->
               <th class="sortable" id="date" title='Enter a specific date or enter a range, and click the "Filter" button.  Value ranges can be entered like: >20201208, <20201210, or 20201207 20201209'>date</th>
-              <th class="sortable" id="candid" title='Enter a specific candid, and click the "Filter" button.'>candid</th>
-              <th class="sortable" id="objectId" title='Enter a specific objectId, and click the "Filter" button.'>objectId</th>
-              <th class="sortable" id="jd" title='Julian Date - Enter a specific jd or enter a range, and click the "Filter" button.  Value ranges can be entered like: >2459190.85, <2459190.85, or  2459190.84 2459190.86'>jd</th>
+              <th class="sortable" id="alert_id" title='Enter a specific alert_id, and click the "Filter" button.'>alert_id</th>
+              <th class="sortable" id="ztf_object_id" title='Enter a specific ztf_object_id, and click the "Filter" button.'>ztf_object_id</th>
+              <th class="" id="date_alert_mjd" title='*Julian Date - Enter a specific *jd or enter a range, and click the "Filter" button.  Value ranges can be entered like: >2459190.85, <2459190.85, or  2459190.84 2459190.86'>mjd</th>
               <th title='ZTF filter g,r,i - Select a filter, and click the "Filter" button.'>filter</th>
-              <th class="sortable" id="ra" title='Right ascension degrees - Enter a specific ra or enter a range, and click the "Filter" button.  Value ranges can be entered like: >85, <85, or  80 90'>ra</th>
-              <th class="sortable" id="dec" title='Declination degrees - Enter a specific dec or enter a range, and click the "Filter" button.  Value ranges can be entered like: >18, <18, or  18.8 19.4'>dec</th>
-              <th class="sortable" id="magpsf" title='Point-spread function (PSF) magnitude - Enter a specific magpsf or enter a range, and click the "Filter" button.  Value ranges can be entered like: >18, <18, or  18.8 19.4'>magpsf</th>
-              <th class="sortable" id="magap" title='Aperture magnitude - Enter a specific magap or enter a range, and click the "Filter" button.  Value ranges can be entered like: >18, <18, or  18.8 19.4'>magap</th>
+              <th class="sortable" id="locus_id" title='Enter a specific locus_id, and click the "Filter" button.'>locus_id</th>
+              <th class="sortable" id="locus_ra" title='Right ascension degrees - Enter a specific ra or enter a range, and click the "Filter" button.  Value ranges can be entered like: >85, <85, or  80 90'>ra</th>
+              <th class="sortable" id="locus_dec" title='Declination degrees - Enter a specific dec or enter a range, and click the "Filter" button.  Value ranges can be entered like: >18, <18, or  18.8 19.4'>dec</th>
+              <th class="" id="ant_mag_corrected" title='Point-spread function (PSF) magnitude - Enter a specific mag or enter a range, and click the "Filter" button.  Value ranges can be entered like: >18, <18, or  18.8 19.4'>ant_mag_corrected</th>
+              <!-- <th class="sortable" id="magap" title='Aperture magnitude - Enter a specific magap or enter a range, and click the "Filter" button.  Value ranges can be entered like: >18, <18, or  18.8 19.4'>magap</th> -->
             </tr>
 
             <!-- <form method="POST" action="/"> -->
@@ -162,31 +163,34 @@ See the help page for descriptions of the table values and available filters.<br
                 <!-- <div class="form-group"> -->
                 <!-- <label for="date">date</label> -->
                 <input type="text" class="form-control form-control-sm" id="date" name="date"
-                  value="{{ request.args.date }}">
+                  value="{{ request.args.date_alert_mjd }}">
                 <!-- </div> -->
               </th>
               <th>
                 <!-- <div class="form-group"> -->
-                <!-- <label for="candid">candid</label> -->
-                <input type="text" class="form-control form-control-sm" id="candid" name="candid"
-                  value="{{ request.args.candid }}">
+                <!-- <label for="alert_id">alert_id</label> -->
+                <input type="text" class="form-control form-control-sm" id="alert_id" name="alert_id"
+                  value="{{ request.args.alert_id }}">
                 <!-- </div> -->
               </th>
               <th>
                 <!-- <div class="form-group"> -->
-                <!-- <label for="objectId">objectId</label> -->
-                <input type="text" class="form-control form-control-sm" id="objectId" name="objectId"
-                  value="{{ request.args.objectId }}">
+                <!-- <label for="ztf_object_id">ztf_object_id</label> -->
+                <input type="text" class="form-control form-control-sm" id="ztf_object_id" name="ztf_object_id"
+                  value="{{ request.args.ztf_object_id }}">
                 <!-- </div> -->
               </th>
               <th>
                 <!-- <label for="jd">jd</label> -->
-                <input type="text" class="form-control form-control-sm" id="jd" name="jd" value="{{ request.args.jd }}">
+                <input type="text" class="form-control form-control-sm" id="date_alert_mjd" name="date_alert_mjd" 
+                  value="{{ request.args.date_alert_mjd }}"> <!-- TODO: not sortable?! -->
               </th>
               <th>
                 <!-- <div class="form-group"> -->
                 <!-- <label for="filter">Filter</label> -->
-                <select id="filter" name="filter" class="form-control form-control-sm"
+                <input type="text" class="form-control form-control-sm" id="ztf_object_id" name="ztf_object_id"
+                  value=""> <!-- TODO -->
+                <!-- <select id="filter" name="filter" class="form-control form-control-sm"
                   sytle="select.form-control {padding: 2px;}" value="{{ request.args.filter }}">
                   <option value="" sytle="padding-right:0" {% if request.args.filter=='' %} selected {% endif %}>
                   </option>
@@ -196,28 +200,28 @@ See the help page for descriptions of the table values and available filters.<br
                   </option>
                   <option value="3" sytle="padding-right:0" {% if request.args.filter=='3' %} selected {% endif %}>i
                   </option>
-
-                </select>
+                </select> -->
                 <!-- </div> -->
               </th>
               <th>
                 <!-- <label for="ra">ra</label> -->
-                <input type="text" class="form-control form-control-sm" id="ra" name="ra" value="{{ request.args.ra }}">
+                <input type="text" class="form-control form-control-sm" id="locus_id" name="locus_id" 
+                  value="{{ request.args.locus_id }}">
+              </th>              
+              <th>
+                <!-- <label for="ra">ra</label> -->
+                <input type="text" class="form-control form-control-sm" id="locus_ra" name="locus_ra" 
+                  value="{{ request.args.locus_ra }}">
               </th>
               <th>
                 <!-- <label for="dec">dec</label> -->
-                <input type="text" class="form-control form-control-sm" id="dec" name="dec"
-                  value="{{ request.args.dec }}">
+                <input type="text" class="form-control form-control-sm" id="locus_dec" name="locus_dec"
+                  value="{{ request.args.locus_dec }}">
               </th>
               <th>
                 <!-- <label for="magpsf">magpsf</label> -->
                 <input type="text" class="form-control form-control-sm" id="magpsf" name="magpsf"
-                  value="{{ request.args.magpsf }}">
-              </th>
-              <th title="magap">
-                <!-- <label for="magap_">magap</label> -->
-                <input type="text" class="form-control form-control-sm" id="magap" name="magap"
-                  value="{{ request.args.magap }}">
+                  value="{{ request.args.magpsf }}"> <!-- TODO -->
               </th>
             </tr>
             <!-- </form> -->
@@ -230,18 +234,23 @@ See the help page for descriptions of the table values and available filters.<br
             {% for alert in table %}
             <tr>
               <!-- <td><a href="/{#{ alert.lco_id }}/" title="{{ alert.lco_id }}">{{ alert.lco_id }#}</a></td> -->
-              <td>{{ alert.date }}</td>
-              <td>{{ alert.candid }}</td>
+              <td>{{ alert.date_alert_mjd|format_mjd_readable }}</td>
+              <td>{{ alert.alert_id }}</td>
               <td>
-                <a href="#myModal" data-toggle="modal" data-target="#objectIdModal" data-object-id="{{ alert.objectId }}" data-date="{{ alert.date }}" data-candid="{{ alert.candid }}"">{{ alert.objectId }}</a>
+                <a href="#myModal" data-toggle="modal" data-target="#objectIdModal" 
+                  data-object-id="{{ alert.ztf_object_id }}" 
+                  data-date="{{ alert.date }}" 
+                  data-candid="{{ alert.alert_id }}"
+                  data-locusid="{{ alert.locus_id }}"
+                  data-locusra="{{ alert.locus_ra }}"
+                  data-locusdec="{{ alert.locus_dec }}">{{ alert.ztf_object_id }}</a>
               </td>
-              <td>{{ alert.jd }}</td>
-              <!-- <td>{#{ alert.candidate.wall_time.strftime('%Y-%m-%d %H:%M:%S') }#}</td> -->
+              <td>{{ alert.date_alert_mjd }}</td>
               <td>{{ alert.filter | astro_filter }}</td>
-              <td>{{ '%.5f'|format(alert.ra) }}</td>
-              <td>{{ '%.5f'|format(alert.dec) }}</td>
-              <td>{{ '%.2f'|format(alert.magpsf) }}</td>
-              <td>{{ '%.2f'|format(alert.magap) }}</td>
+              <td>{{ alert.locus_id  }}</td>
+              <td>{{ '%.5f'|format(alert.locus_ra) }}</td>
+              <td>{{ '%.5f'|format(alert.locus_dec) }}</td>
+              <td>{{ alert.ant_mag_corrected | mag_filter }}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -271,7 +280,7 @@ See the help page for descriptions of the table values and available filters.<br
 </form>
 
 <!-- Modal -->
-<div class="modal fade" id="objectIdModal" tabindex="-1" role="dialog" aria-labelledby="objectIdModalLabel"
+<div class="modal fade" id="objectIdModal" tabindex="-1" role="dialog" aria-labelledby="objectIdModalLabel" 
   aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -281,14 +290,18 @@ See the help page for descriptions of the table values and available filters.<br
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    <!-- ?NOTE: When a new modal is opened the last selected tab is shown, this intended -->
+    <!-- ?NOTE: When a new modal is opened the last selected tab is shown, this is intended -->
       <div class="modal-body">
         <div role="tabpanel">
           <!-- Nav tabs -->
           <ul class="nav nav-tabs" role="tablist">
               <li class="nav-item">
                 <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview"
-                  aria-selected="true">Lightcure Overview</a>
+                  aria-selected="true">Locus Lightcurve</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="thumbnails-tab" data-toggle="tab" href="#thumbnails" role="tab" aria-controls="thumbnails"
+                  aria-selected="false">Thumbnails</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="features-tab" data-toggle="tab" href="#features" role="tab" aria-controls="features"
@@ -303,22 +316,173 @@ See the help page for descriptions of the table values and available filters.<br
           <!-- Tab panes -->
           <div class="tab-content" id="objectIdModalTabContent">
               <div role="tabpanel" class="tab-pane fade show active" id="overview" aria-labelledby="overview-tab">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      <br>
+                      <span id="locus-id-label">Locus ID:&nbsp; </span><br>
+                      <span id="locus-ra-label">Locus Ra:&nbsp; </span><br>
+                      <span id="locus-dec-label">Locus Dec: </span><br>
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <div style="position:relative; min-height:100px;" class="container">
+                      <div style="position:absolute; bottom:0; right:0;" class="block">
+                        <a class="btn" id="btn_locus_csv" href="/locus_plot_csv?locusId="><i class="fa fa-download" ></i> Download Lightcurve as CSV</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="locus-plot"></div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="thumbnails" aria-labelledby="thumbnails-tab">   
                 <p>
                   <br>
-                  <span name="object-id-label">Candid: </span>
-                  <span style="position:absolute; right:0; margin-right: 16px;" name="date-label">Date: </span></p> <!-- TODO: position properly -->
-                <p>
-                  <img name="object-id-image" /><img name="object-id-legend" src="/static/img/_ZTF_lc_plots/lightcurve_legend.png" /><br>
-                  <img name="object-id-plot"  />
+                  <span>Alert Thumbnails: </span>
                 </p>
-
+                <div style="height: 200px; max-height: 200px;">
+                  <div  class="d-flex h-100" style="gap: 10px;">
+                    <div class="base-image-container">
+                      <div style="position: relative; height: 200px; width: 200px;">
+                        Science<br>
+                        <img id="thumbnail-1" src="" class="w-100" style="max-height: 200px; max-width: 200px; z-index: 1; position: absolute; transform: scaleY(-1);">
+                      </div>
+                    </div>
+                    <div class="base-image-container">
+                      <div style="position: relative; height: 200px; width: 200px;">
+                        Template<br>
+                        <img id="thumbnail-2" src="https://storage.googleapis.com/antares-production-ztf-stamps/candid2514207965515010010_ref.fits.png" class="w-100" style="max-height: 200px; max-width: 200px; z-index: 1; position: absolute; transform: scaleY(-1);">
+                      </div>
+                    </div>
+                    <div class="base-image-container">
+                      <div style="position: relative; height: 200px; width: 200px;">
+                        Difference<br>
+                        <img id="thumbnail-3" src="https://storage.googleapis.com/antares-production-ztf-stamps/candid2514207965515010010_pid2514207965515_targ_diff.fits.png" class="w-100" style="max-height: 200px; max-width: 200px; z-index: 1; position: absolute; transform: scaleY(-1);">
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div role="tabpanel" class="tab-pane fade" id="features" aria-labelledby="features-tab">   
                 <p>
                   <br>
                   <span>Features: </span>
+
+                  <!--# https://www.npmjs.com/package/@nobleclem/jquery-multiselect -->
+                  <select name="basic[]" multiple="multiple" class="3col active">
+                    <option value="feature_amplitude_magn_r">feature_amplitude_magn_r</option>
+                    <option value="feature_anderson_darling_normal_magn_r">feature_anderson_darling_normal_magn_r</option>
+                    <option value="feature_beyond_1_std_magn_r">feature_beyond_1_std_magn_r</option>
+                    <option value="feature_beyond_2_std_magn_r">feature_beyond_2_std_magn_r</option>
+                    <option value="feature_cusum_magn_r">feature_cusum_magn_r</option>
+                    <option value="feature_eta_e_magn_r">feature_eta_e_magn_r</option>
+                    <option value="feature_inter_percentile_range_2_magn_r">feature_inter_percentile_range_2_magn_r</option>
+                    <option value="feature_inter_percentile_range_10_magn_r">feature_inter_percentile_range_10_magn_r</option>
+                    <option value="feature_inter_percentile_range_25_magn_r">feature_inter_percentile_range_25_magn_r</option>
+                    <option value="feature_kurtosis_magn_r">feature_kurtosis_magn_r</option>
+                    <option value="feature_linear_fit_slope_magn_r">feature_linear_fit_slope_magn_r</option>
+                    <option value="feature_linear_fit_slope_sigma_magn_r">feature_linear_fit_slope_sigma_magn_r</option>
+                    <option value="feature_linear_fit_reduced_chi2_magn_r">feature_linear_fit_reduced_chi2_magn_r</option>
+                    <option value="feature_linear_trend_magn_r">feature_linear_trend_magn_r</option>
+                    <option value="feature_linear_trend_sigma_magn_r">feature_linear_trend_sigma_magn_r</option>
+                    <option value="feature_magnitude_percentage_ratio_40_5_magn_r">feature_magnitude_percentage_ratio_40_5_magn_r</option>
+                    <option value="feature_magnitude_percentage_ratio_20_5_magn_r">feature_magnitude_percentage_ratio_20_5_magn_r</option>
+                    <option value="feature_maximum_slope_magn_r">feature_maximum_slope_magn_r</option>
+                    <option value="feature_mean_magn_r">feature_mean_magn_r</option>
+                    <option value="feature_median_absolute_deviation_magn_r">feature_median_absolute_deviation_magn_r</option>
+                    <option value="feature_percent_amplitude_magn_r">feature_percent_amplitude_magn_r</option>
+                    <option value="feature_percent_difference_magnitude_percentile_5_magn_r">feature_percent_difference_magnitude_percentile_5_magn_r</option>
+                    <option value="feature_percent_difference_magnitude_percentile_10_magn_r">feature_percent_difference_magnitude_percentile_10_magn_r</option>
+                    <option value="feature_median_buffer_range_percentage_10_magn_r">feature_median_buffer_range_percentage_10_magn_r</option>
+                    <option value="feature_median_buffer_range_percentage_20_magn_r">feature_median_buffer_range_percentage_20_magn_r</option>
+                    <option value="feature_period_0_magn_r">feature_period_0_magn_r</option>
+                    <option value="feature_period_s_to_n_0_magn_r">feature_period_s_to_n_0_magn_r</option>
+                    <option value="feature_period_1_magn_r">feature_period_1_magn_r</option>
+                    <option value="feature_period_s_to_n_1_magn_r">feature_period_s_to_n_1_magn_r</option>
+                    <option value="feature_period_2_magn_r">feature_period_2_magn_r</option>
+                    <option value="feature_period_s_to_n_2_magn_r">feature_period_s_to_n_2_magn_r</option>
+                    <option value="feature_period_3_magn_r">feature_period_3_magn_r</option>
+                    <option value="feature_period_s_to_n_3_magn_r">feature_period_s_to_n_3_magn_r</option>
+                    <option value="feature_period_4_magn_r">feature_period_4_magn_r</option>
+                    <option value="feature_period_s_to_n_4_magn_r">feature_period_s_to_n_4_magn_r</option>
+                    <option value="feature_periodogram_amplitude_magn_r">feature_periodogram_amplitude_magn_r</option>
+                    <option value="feature_periodogram_beyond_2_std_magn_r">feature_periodogram_beyond_2_std_magn_r</option>
+                    <option value="feature_periodogram_beyond_3_std_magn_r">feature_periodogram_beyond_3_std_magn_r</option>
+                    <option value="feature_periodogram_standard_deviation_magn_r">feature_periodogram_standard_deviation_magn_r</option>
+                    <option value="feature_chi2_magn_r">feature_chi2_magn_r</option>
+                    <option value="feature_skew_magn_r">feature_skew_magn_r</option>
+                    <option value="feature_standard_deviation_magn_r">feature_standard_deviation_magn_r</option>
+                    <option value="feature_stetson_k_magn_r">feature_stetson_k_magn_r</option>
+                    <option value="feature_weighted_mean_magn_r">feature_weighted_mean_magn_r</option>
+                    <option value="feature_anderson_darling_normal_flux_r">feature_anderson_darling_normal_flux_r</option>
+                    <option value="feature_cusum_flux_r">feature_cusum_flux_r</option>
+                    <option value="feature_eta_e_flux_r">feature_eta_e_flux_r</option>
+                    <option value="feature_excess_variance_flux_r">feature_excess_variance_flux_r</option>
+                    <option value="feature_kurtosis_flux_r">feature_kurtosis_flux_r</option>
+                    <option value="feature_mean_variance_flux_r">feature_mean_variance_flux_r</option>
+                    <option value="feature_chi2_flux_r">feature_chi2_flux_r</option>
+                    <option value="feature_skew_flux_r">feature_skew_flux_r</option>
+                    <option value="feature_stetson_k_flux_r">feature_stetson_k_flux_r</option>
+                    <option value="feature_amplitude_magn_g">feature_amplitude_magn_g</option>
+                    <option value="feature_anderson_darling_normal_magn_g">feature_anderson_darling_normal_magn_g</option>
+                    <option value="feature_beyond_1_std_magn_g">feature_beyond_1_std_magn_g</option>
+                    <option value="feature_beyond_2_std_magn_g">feature_beyond_2_std_magn_g</option>
+                    <option value="feature_cusum_magn_g">feature_cusum_magn_g</option>
+                    <option value="feature_eta_e_magn_g">feature_eta_e_magn_g</option>
+                    <option value="feature_inter_percentile_range_2_magn_g">feature_inter_percentile_range_2_magn_g</option>
+                    <option value="feature_inter_percentile_range_10_magn_g">feature_inter_percentile_range_10_magn_g</option>
+                    <option value="feature_inter_percentile_range_25_magn_g">feature_inter_percentile_range_25_magn_g</option>
+                    <option value="feature_kurtosis_magn_g">feature_kurtosis_magn_g</option>
+                    <option value="feature_linear_fit_slope_magn_g">feature_linear_fit_slope_magn_g</option>
+                    <option value="feature_linear_fit_slope_sigma_magn_g">feature_linear_fit_slope_sigma_magn_g</option>
+                    <option value="feature_linear_fit_reduced_chi2_magn_g">feature_linear_fit_reduced_chi2_magn_g</option>
+                    <option value="feature_linear_trend_magn_g">feature_linear_trend_magn_g</option>
+                    <option value="feature_linear_trend_sigma_magn_g">feature_linear_trend_sigma_magn_g</option>
+                    <option value="feature_magnitude_percentage_ratio_40_5_magn_g">feature_magnitude_percentage_ratio_40_5_magn_g</option>
+                    <option value="feature_magnitude_percentage_ratio_20_5_magn_g">feature_magnitude_percentage_ratio_20_5_magn_g</option>
+                    <option value="feature_maximum_slope_magn_g">feature_maximum_slope_magn_g</option>
+                    <option value="feature_mean_magn_g">feature_mean_magn_g</option>
+                    <option value="feature_median_absolute_deviation_magn_g">feature_median_absolute_deviation_magn_g</option>
+                    <option value="feature_percent_amplitude_magn_g">feature_percent_amplitude_magn_g</option>
+                    <option value="feature_percent_difference_magnitude_percentile_5_magn_g">feature_percent_difference_magnitude_percentile_5_magn_g</option>
+                    <option value="feature_percent_difference_magnitude_percentile_10_magn_g">feature_percent_difference_magnitude_percentile_10_magn_g</option>
+                    <option value="feature_median_buffer_range_percentage_10_magn_g">feature_median_buffer_range_percentage_10_magn_g</option>
+                    <option value="feature_median_buffer_range_percentage_20_magn_g">feature_median_buffer_range_percentage_20_magn_g</option>
+                    <option value="feature_period_0_magn_g">feature_period_0_magn_g</option>
+                    <option value="feature_period_s_to_n_0_magn_g">feature_period_s_to_n_0_magn_g</option>
+                    <option value="feature_period_1_magn_g">feature_period_1_magn_g</option>
+                    <option value="feature_period_s_to_n_1_magn_g">feature_period_s_to_n_1_magn_g</option>
+                    <option value="feature_period_2_magn_g">feature_period_2_magn_g</option>
+                    <option value="feature_period_s_to_n_2_magn_g">feature_period_s_to_n_2_magn_g</option>
+                    <option value="feature_period_3_magn_g">feature_period_3_magn_g</option>
+                    <option value="feature_period_s_to_n_3_magn_g">feature_period_s_to_n_3_magn_g</option>
+                    <option value="feature_period_4_magn_g">feature_period_4_magn_g</option>
+                    <option value="feature_period_s_to_n_4_magn_g">feature_period_s_to_n_4_magn_g</option>
+                    <option value="feature_periodogram_amplitude_magn_g">feature_periodogram_amplitude_magn_g</option>
+                    <option value="feature_periodogram_beyond_2_std_magn_g">feature_periodogram_beyond_2_std_magn_g</option>
+                    <option value="feature_periodogram_beyond_3_std_magn_g">feature_periodogram_beyond_3_std_magn_g</option>
+                    <option value="feature_periodogram_standard_deviation_magn_g">feature_periodogram_standard_deviation_magn_g</option>
+                    <option value="feature_chi2_magn_g">feature_chi2_magn_g</option>
+                    <option value="feature_skew_magn_g">feature_skew_magn_g</option>
+                    <option value="feature_standard_deviation_magn_g">feature_standard_deviation_magn_g</option>
+                    <option value="feature_stetson_k_magn_g">feature_stetson_k_magn_g</option>
+                    <option value="feature_weighted_mean_magn_g">feature_weighted_mean_magn_g</option>
+                    <option value="feature_anderson_darling_normal_flux_g">feature_anderson_darling_normal_flux_g</option>
+                    <option value="feature_cusum_flux_g">feature_cusum_flux_g</option>
+                    <option value="feature_eta_e_flux_g">feature_eta_e_flux_g</option>
+                    <option value="feature_excess_variance_flux_g">feature_excess_variance_flux_g</option>
+                    <option value="feature_kurtosis_flux_g">feature_kurtosis_flux_g</option>
+                    <option value="feature_mean_variance_flux_g">feature_mean_variance_flux_g</option>
+                    <option value="feature_chi2_flux_g">feature_chi2_flux_g</option>
+                    <option value="feature_skew_flux_g">feature_skew_flux_g</option>
+                    <option value="feature_stetson_k_flux_g">feature_stetson_k_flux_g</option>
+                </select>  
+
+                  <div id="feature-plot"></div>
                 </p>
-                <span id="features_output"></span>
+                <!-- select feature_anderson_darling_normal_magn_r, feature_amplitude_magn_g, date_alert_mjd, locus_id from featuretable 
+                  WHERE locus_id LIKE 'ANT2018gj4my' ORDER BY date_alert_mjd -->
+                <span id="features_table_output"></span>
               </div>
               <div role="tabpanel" class="tab-pane fade" id="classification" aria-labelledby="classification-tab">                
                 <p>
@@ -341,24 +505,62 @@ See the help page for descriptions of the table values and available filters.<br
   //triggered when modal is about to be shown
   $('#objectIdModal').on('show.bs.modal', function(e) {
     //get data-id attribute of the clicked element and populate text box
-    var objectId = $(e.relatedTarget).data('object-id');
-    var candid = $(e.relatedTarget).data('candid');
-    var date = $(e.relatedTarget).data('date');
+    var ztf_object_id = $(e.relatedTarget).data('object-id');
+    var candid = $(e.relatedTarget).data('candid').replace("ztf_candidate:", "");
+    //var date = $(e.relatedTarget).data('date');
+    var locus_id = $(e.relatedTarget).data('locusid');
+    var locus_ra = $(e.relatedTarget).data('locusra');
+    var locus_dec = $(e.relatedTarget).data('locusdec');
     // $(e.currentTarget).find('#object-id-label').html(objectId);
-    $('body').find('#objectIdModalLabel').html(objectId); // modal title {# ! TODO: de-mess! #}
-    $('body').find('span[name="object-id-label"]').html("Candid: " + candid); //{# ! TODO: de-mess! #}
-    $('body').find('span[name="date-label"]').html("Date: " + date); //{# ! TODO: de-mess! #}
-    $('body').find('img[name="object-id-image"]').attr("src", "/static/img/_ZTF_lc_plots/"+objectId+".png");
-    var csvUrl = "CsvExists('/static/_ZTF_lightcurves_concat/"+objectId+".csv')";
-    $('body').find('img[name="object-id-image"]').attr("onerror", csvUrl);
-    $('body').find('img[name="object-id-plot"]').attr("src", "/static/img/_ZTF_cutouts/"+date+"/"+objectId+"_"+candid+".png");
-    $('body').find('img[name="object-id-plot"]').attr("onerror", "this.src='/static/img/_ZTF_lc_plots/missing_file.png';");
-    query_features(objectId, candid);
-    query_classification(objectId);
+    $('body').find('#objectIdModalLabel').html(ztf_object_id); // modal title {# ! TODO: de-mess! #}
+    $('#locus-id-label').html('Locus ID: '+ locus_id);
+    $('#locus-ra-label').html('Locus Ra: '+ locus_ra);
+    $('#locus-dec-label').html('Locus Dec: '+ locus_dec);
+    //$('body').find('span[name="date-label"]').html("Date: " + date); //{# ! TODO: de-mess! #}
+    $('#thumbnail-1').attr("src", "https://storage.googleapis.com/antares-production-ztf-stamps/candid"+candid+"_pid"+candid.substring(0,13)+"_targ_sci.fits.png");
+    $('#thumbnail-2').attr("src", "https://storage.googleapis.com/antares-production-ztf-stamps/candid"+candid+"_ref.fits.png");
+    $('#thumbnail-3').attr("src", "https://storage.googleapis.com/antares-production-ztf-stamps/candid"+candid+"_pid"+candid.substring(0,13)+"_targ_diff.fits.png");
+    //$('body').find('img[name="object-id-image"]').attr("src", "/static/img/_ZTF_lc_plots/"+ztf_object_id+".png");
+    //var csvUrl = "CsvExists('/static/_ZTF_lightcurves_concat/"+ztf_object_id+".csv')";
+    //$('body').find('img[name="object-id-image"]').attr("onerror", csvUrl);
+    //$('body').find('img[name="object-id-plot"]').attr("src", "/static/img/_ZTF_cutouts/"+date+"/"+ztf_object_id+"_"+alert_id+".png"); //NOTE: alert_id was candid
+    //$('body').find('img[name="object-id-plot"]').attr("onerror", "this.src='/static/img/_ZTF_lc_plots/missing_file.png';");
+    //update URL Of download button
+    $('#btn_locus_csv').attr('href',  $('#btn_locus_csv').attr('href')+locus_id);
+    query_features_table(candid);
+    query_locusplot(locus_id);
+    //set selected & reload UI:
+    let default_features = ['feature_amplitude_magn_r',
+        'feature_anderson_darling_normal_magn_r',
+        'feature_beyond_1_std_magn_r',
+        'feature_beyond_2_std_magn_r',
+        'feature_cusum_magn_r'];
+    $('select[multiple].active.3col').val(default_features);
+    $('select[multiple].active.3col').multiselect('reload');
+    query_featureplot(locus_id, default_features.join(','));
+    
+    //query_classification(ztf_object_id);
   });
 
-  function query_features(objectId, candid) {
-    let backend_url = `/query_features?objectId=${objectId}&candid=${candid}`;
+  //TODO: Deprecated?
+  function query_locusplot(locus_id) {
+    let lightcurve_data_url = '/query_lightcurve_data?locusId=' + locus_id;
+    $.ajax({
+          url: lightcurve_data_url,
+          cache: false
+    }).done(function(data) {
+        // const divPosition = data.search("</div>");
+        // document.getElementById("locus-plot").innerHTML = data.substring(0,divPosition);//
+        // const scriptPosition = data.search("(?<=<script type=\"text/javascript\">)");
+        // var script = document.createElement('script');
+        // script.innerHTML = data.substring(scriptPosition, data.length-10);
+        // document.body.appendChild(script);
+        $("#locus-plot").html(data);
+    });
+  }
+
+  function query_features_table(alert_id) {
+    let backend_url = `/query_features?alert_id=${alert_id}`;
     //alert(backend_url);
     $.ajax({
       type: 'GET',
@@ -367,13 +569,31 @@ See the help page for descriptions of the table values and available filters.<br
       complete: function(r){
         console.log(r.responseText);
         var json_obj = JSON.parse(r.responseText);
-        $('body').find('#features_output').html(json2table(json_obj));
+        $('body').find('#features_table_output').html(json2table(json_obj));
       }
     });
   }
 
-  function query_classification(objectId) {
-    var backend_url = '/query_classification?objectId='+ objectId;
+  function query_featureplot(locus_id, selected_features) {
+    console.log(selected_features);
+
+    let featureplot_data_url = '/query_featureplot_data?locusId=' + locus_id + '&features=' + selected_features;
+    $.ajax({
+          url: featureplot_data_url,
+          cache: false
+    }).done(function(data) {
+        // const divPosition = data.search("</div>");
+        // document.getElementById("locus-plot").innerHTML = data.substring(0,divPosition);//
+        // const scriptPosition = data.search("(?<=<script type=\"text/javascript\">)");
+        // var script = document.createElement('script');
+        // script.innerHTML = data.substring(scriptPosition, data.length-10);
+        // document.body.appendChild(script);
+        $("#feature-plot").html(data);
+    });
+  }
+
+/*  function query_classification(ztf_object_id) {
+    var backend_url = '/query_classification?objectId='+ ztf_object_id;
     $.ajax({
       type: 'GET',
       url: backend_url,
@@ -384,12 +604,13 @@ See the help page for descriptions of the table values and available filters.<br
         $('body').find('#classification_output').html(json2table(json_obj));
       }
     });
-  }
-
+  }*/
+  
+  //feature_table specific as of now
   function json2table(json_obj) {
     var stable = '<table class="table table-sm table-striped">';
         for (let key in json_obj) {
-          if (json_obj[key] != null) {
+          if (json_obj[key] != null && key.startsWith('feature_')) {
             let value = json_obj[key];
             //console.log(key, value);
             //fstring += key + ': ' + value + '<br>';
@@ -497,6 +718,63 @@ See the help page for descriptions of the table values and available filters.<br
       }
     });
   }
+</script>
+
+<script>
+  $(function () {
+      $('select[multiple].active.3col').multiselect({
+          columns: 2,
+          placeholder: 'Select Features to Plot',
+          search: true,
+          maxSelected: 10,
+          searchOptions: {
+              'default': 'Search Features'
+          },
+          selectAll: false, 
+          onControlClose: function (element) {
+              console.log($('select[multiple].active.3col').val());
+              let locusId = $('#locus-id-label').text().replace('Locus ID: ', '');
+              console.log(locusId);
+              let new_selected_features = $('select[multiple].active.3col').val();
+              query_featureplot(locusId, new_selected_features.join(','));
+          },
+          onOptionClick: function( element, option ) {
+              var maxSelect = 10;
+
+              // too many selected, deselect this option
+              if( $(element).val().length > maxSelect ) {
+                  if( $(option).is(':checked') ) {
+                      var thisVals = $(element).val();
+
+                      thisVals.splice(
+                          thisVals.indexOf( $(option).val() ), 1
+                      );
+
+                      $(element).val( thisVals );
+
+                      $(option).prop( 'checked', false ).closest('li')
+                          .toggleClass('selected');
+                  }
+              }
+              // max select reached, disable non-checked checkboxes
+              else if( $(element).val().length == maxSelect ) {
+                  $(element).next('.ms-options-wrap')
+                      .find('li:not(.selected)').addClass('disabled')
+                      .find('input[type="checkbox"]')
+                          .attr( 'disabled', 'disabled' );
+              }
+              // max select not reached, make sure any disabled
+              // checkboxes are available
+              else {
+                  $(element).next('.ms-options-wrap')
+                      .find('li.disabled').removeClass('disabled')
+                      .find('input[type="checkbox"]')
+                          .removeAttr( 'disabled' );
+              }
+          }
+      });
+
+  });
 </script>
 
 {% endblock %}

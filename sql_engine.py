@@ -9,17 +9,28 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 
 class Ztf(Base):
-    __tablename__ = 'indextable'
-    id = Column(Integer, primary_key=True)
-    date = Column(Integer)
-    candid = Column(Integer)
-    objectId = Column(String)
-    jd = Column(Float)
-    filter = Column(Integer)
-    ra = Column(Float)
-    dec = Column(Float)
-    magpsf = Column(Float)
-    magap = Column(Float)
+    #OLD
+    #__tablename__ = 'indextable'
+    #id = Column(Integer, primary_key=True)
+    #date = Column(Integer)
+    #candid = Column(Integer)
+    #objectId = Column(String)
+    #jd = Column(Float)
+    #filter = Column(Integer)
+    #ra = Column(Float)
+    #dec = Column(Float)
+    #magpsf = Column(Float)
+    #magap = Column(Float)
+    
+    __tablename__ = 'featuretable'
+    #id = Column(Integer, primary_key=True)
+    date_alert_mjd = db.Column(db.Float, primary_key=True)
+    alert_id = db.Column(db.String, primary_key=True)
+    ztf_object_id = db.Column(db.String)
+    locus_id = db.Column(db.String, primary_key=True)
+    locus_ra = db.Column(db.Float)
+    locus_dec = db.Column(db.Float)
+    ant_mag_corrected = db.Column(db.Float)    
 
     # @property
     # def ra(self):
